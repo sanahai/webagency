@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Builder (Server Connected)</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* 스타일은 이전 버전과 100% 동일하므로 생략하거나 그대로 복사해서 사용하세요. 
+           핵심은 아래 <script> 부분입니다. */
+        body { margin:0; padding:0; display:flex; height:100vh; overflow:hidden; font-family:'Pretendard'; background:#1a1a1a; }
+        .preview-area { flex:1; background:#e0e0e0; display:flex; justify-content:center; }
+        .website-frame { width:100%; height:100%; background:white; overflow-y:auto; }
+        .editor-area { width:420px; background:#2c2c2c; color:#eee; display:flex; flex-direction:column; border-left:1px solid #444; flex-shrink:0; z-index:100; }
+        .editor-header { padding:15px; background:#1f1f1f; border-bottom:1px solid #444; font-weight:bold; color:#c5a065; display:flex; justify-content:space-between; align-items:center; }
+        .status-dot { width:10px; height:10px; background:red; border-radius:50%; display:inline-block; margin-right:5px; }
+        .status-text { font-size:12px; color:#aaa; font-weight:normal; }
+        .editor-scroll { flex:1; overflow-y:auto; padding:20px; }
+        .save-bar { padding:15px; background:#1f1f1f; border-top:1px solid #444; }
+        .btn-save { width:100%; padding:14px; background:#c5a065; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; }
+        .btn-save:hover { background:#b08d55; }
+        /* ...나머지 스타일들 (input, textarea 등)은 이전 코드와 동일... */
+        .section-group { background: #383838; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .group-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #555; padding-bottom: 8px; color: white; }
+        .input-wrap { margin-bottom: 12px; }
+        .label { font-size: 11px; color: #aaa; margin-bottom: 5px; display: block; }
+        input[type="text"], textarea { width: 100%; background: #444; border: 1px solid #555; color: white; padding: 8px; border-radius: 4px; font-size: 13px; }
+        /* 웹사이트 내부 스타일 (생략 - 위 코드와 동일하게 적용 필요) */
+        .w-header { padding: 10px; text-align:center; border-bottom:1px solid #eee; }
+        .w-hero { height:300px; background-size:cover; display:flex; align-items:center; justify-content:center; color:white; font-size:30px; }
+    </style>
+</head>
+<body>
+
+    <div class="preview-area">
+        <div class="website-frame" id="website-root"></div>
+    </div>
+
+    <div class="editor-area">
+        <div class="editor-header">
+            <span>BEAUTY SERVER</span>
+            <span class="status-text"><span class="status-dot" id="status-dot"></span><span id="status-msg">연결 중...</span></span>
+        </div>
+        <div class="editor-scroll" id="editor-panel">
+            <div style="text-align:center; padding:50px; color:#777;">데이터를 불러오는 중입니다...</div>
+        </div>
+        <div class="save-bar">
+            <button class="btn-save" onclick="saveToFirebase()">☁️ 서버에 저장하기</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // 중요: 아래 코드는 예시입니다. 본인의 firebaseConfig로 교체해야 합니다.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ============================================================
+        // [설정 영역] 이곳을 본인의 키값으로 바꿔주세요!
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjtZb90SwZt5bf-aHpqjdcX8nVtFjou_s",
+            authDomain: "beauty-builder.firebaseapp.com",
+            projectId: "beauty-builder",
+            storageBucket: "beauty-builder.firebasestorage.app",
+            messagingSenderId: "121769774740",
+            appId: "1:121769774740:web:2b078bf43b88d599472e81"
+        };
+        // ============================================================
+
+        // 파이어베이스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 전역 변수로 만들기 (다른 함수에서 쓰기 위해)
+        window.db = db;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+
+        // DB 연결 확인 및 데이터 로드 시작
+        initApp();
+    </script>
+
+    <script>
+        // ===========================================
+        // 2. 핵심 로직 (서버 통신)
+        // ===========================================
+        let siteData = {}; // 초기엔 빈 객체
+
+        // 기본 데이터 (DB가 비어있을 때 사용)
+        const defaultData = {
+            brand: { name: "Lumière Skin" },
+            hero: { title: "서버와 연결된<br>웹 빌더입니다", image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9" },
+            // ... 나머지 데이터 구조는 이전과 동일하게 유지 ...
+            about: { title: "브랜드 소개", desc: "내용을 입력하세요.", image: "" },
+            programs: [],
+            reviews: [],
+            faqs: [],
+            footer: { address: "서울 강남구", phone: "02-1234-5678" }
+        };
+
+        // 앱 시작: DB에서 데이터 가져오기
+        async function initApp() {
+            try {
+                const docRef = window.doc(window.db, "sites", "my-shop"); // 'sites'라는 컬렉션의 'my-shop' 문서
+                const docSnap = await window.getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    console.log("DB 데이터 로드 성공:", docSnap.data());
+                    siteData = docSnap.data();
+                } else {
+                    console.log("데이터가 없어 기본값으로 시작합니다.");
+                    siteData = JSON.parse(JSON.stringify(defaultData));
+                }
+                
+                // UI 갱신
+                updateStatus(true);
+                renderEditor();
+                renderWebsite();
+
+            } catch (error) {
+                console.error("DB 연결 실패:", error);
+                updateStatus(false);
+                alert("서버 연결에 실패했습니다. firebaseConfig를 확인해주세요.");
+                
+                // 에러나도 일단 기본값으로 실행은 되게 처리
+                siteData = defaultData;
+                renderEditor();
+                renderWebsite();
+            }
+        }
+
+        // 서버에 저장하기
+        async function saveToFirebase() {
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "저장 중...";
+            
+            try {
+                // 'sites' 컬렉션의 'my-shop' 문서에 덮어쓰기
+                await window.setDoc(window.doc(window.db, "sites", "my-shop"), siteData);
+                
+                alert("✅ 서버에 안전하게 저장되었습니다!");
+                btn.innerText = "☁️ 서버에 저장하기";
+            } catch (error) {
+                console.error("저장 실패:", error);
+                alert("저장 중 오류가 발생했습니다.");
+                btn.innerText = "다시 시도";
+            }
+        }
+
+        function updateStatus(isConnected) {
+            const dot = document.getElementById('status-dot');
+            const msg = document.getElementById('status-msg');
+            if(isConnected) {
+                dot.style.background = "#00ff00"; // 녹색
+                msg.innerText = "서버 연결됨";
+            } else {
+                dot.style.background = "red";
+                msg.innerText = "연결 실패";
+            }
+        }
+
+        // ===========================================
+        // 3. 기존 렌더링 함수들 (이전 코드와 동일)
+        // ===========================================
+        function renderEditor() {
+            const panel = document.getElementById('editor-panel');
+            // ... 이전 코드의 renderEditor 내용 복사 ...
+            // (간소화를 위해 내용 생략, 실제 사용시 이전 코드의 renderEditor 함수 전체를 여기에 붙여넣으세요)
+            panel.innerHTML = `<div class="section-group"><div class="group-title">1. 메인 설정 (서버 연동됨)</div>
+            <div class="input-wrap"><label class="label">브랜드명</label><input type="text" value="${siteData.brand?.name || ''}" onchange="siteData.brand.name = this.value; renderWebsite();"></div>
+            <div class="input-wrap"><label class="label">메인 카피</label><textarea onchange="siteData.hero.title = this.value; renderWebsite();">${siteData.hero?.title || ''}</textarea></div>
+            </div>`; 
+        }
+
+        function renderWebsite() {
+            const root = document.getElementById('website-root');
+            // ... 이전 코드의 renderWebsite 내용 복사 ...
+            // (간소화를 위해 내용 생략)
+            root.innerHTML = `<div class="w-header" style="font-size:20px; font-weight:bold;">${siteData.brand?.name}</div>
+            <div class="w-hero" style="background-image:url('${siteData.hero?.image}')">${siteData.hero?.title}</div>`;
+        }
+        
+        // (주의) 이전 코드의 handleImageUpload, addItem 등의 헬퍼 함수들도 여기에 다 포함되어야 합니다.
+
+    </script>
+</body>
+</html>
