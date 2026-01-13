@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Shop Landing Builder</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================
+           1. 스타일링 (Design System)
+           ============================ */
+        :root {
+            --primary: #d4a373; /* 고급스러운 베이지 골드 */
+            --primary-light: #faedcd;
+            --text-dark: #333333;
+            --text-gray: #666666;
+            --bg-body: #f3f4f6;
+            --bg-white: #ffffff;
+            --font-serif: 'Ibarra Real Nova', serif;
+            --font-sans: 'Pretendard', sans-serif;
+        }
+
+        body { margin: 0; height: 100vh; display: flex; overflow: hidden; font-family: var(--font-sans); background: var(--bg-body); }
+        * { box-sizing: border-box; }
+
+        /* --- 레이아웃 분할 --- */
+        .builder-wrapper { display: flex; width: 100%; height: 100%; }
+        
+        /* 왼쪽: 미리보기 영역 */
+        .preview-pane {
+            flex: 6; padding: 40px; background: #e0e0e0;
+            display: flex; justify-content: center; overflow-y: auto;
+        }
+        
+        .mobile-frame {
+            width: 100%; max-width: 480px; /* 모바일/앱 뷰 느낌 */
+            background: white; min-height: 1000px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 20px; overflow: hidden; position: relative;
+        }
+
+        /* 오른쪽: 에디터 영역 */
+        .editor-pane {
+            flex: 4; background: white; border-left: 1px solid #ccc;
+            display: flex; flex-direction: column; z-index: 10;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+        }
+        .editor-header { padding: 20px; background: #222; color: white; font-weight: bold; display: flex; justify-content: space-between; }
+        .editor-scroll { padding: 30px; overflow-y: auto; flex: 1; }
+        .save-area { padding: 20px; border-top: 1px solid #eee; background: #f9f9f9; }
+
+        /* --- 뷰티샵 템플릿 디자인 (왼쪽 화면 내부) --- */
+        
+        /* 1. 헤더 & 히어로 */
+        .beauty-header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .shop-logo { font-family: var(--font-serif); font-size: 22px; font-weight: 600; color: var(--text-dark); letter-spacing: 1px; }
+        
+        .hero-banner {
+            height: 350px; background-size: cover; background-position: center;
+            position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero-overlay { background: rgba(0,0,0,0.3); position: absolute; top:0; left:0; width:100%; height:100%; }
+        .hero-text { position: relative; color: white; padding: 20px; z-index: 2; }
+        .hero-title { font-family: var(--font-serif); font-size: 32px; margin-bottom: 10px; font-weight: 400; line-height: 1.2; }
+        .hero-sub { font-size: 14px; opacity: 0.9; font-weight: 300; letter-spacing: 1px; }
+
+        /* 2. 철학 (Introduction) */
+        .section { padding: 40px 30px; }
+        .section-title { font-family: var(--font-serif); font-size: 24px; color: var(--text-dark); margin-bottom: 30px; text-align: center; position: relative; }
+        .section-title::after { content:''; display: block; width: 40px; height: 1px; background: var(--primary); margin: 15px auto 0; }
+        
+        .intro-text { text-align: center; color: var(--text-gray); font-size: 15px; line-height: 1.8; word-break: keep-all; }
+
+        /* 3. 프로그램 (Services) */
+        .program-card {
+            display: flex; gap: 15px; margin-bottom: 20px;
+            background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px;
+            transition: 0.3s;
+        }
+        .program-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #eee; flex-shrink: 0; }
+        .program-info h4 { margin: 0 0 5px 0; font-size: 16px; color: var(--text-dark); }
+        .program-info p { margin: 0; font-size: 13px; color: #888; line-height: 1.5; }
+        .program-price { font-weight: bold; color: var(--primary); margin-top: 8px; font-size: 14px; }
+
+        /* 4. 예약안내 (Callout) */
+        .reservation-box {
+            background-color: var(--primary-light); color: #5a4a30;
+            padding: 30px; text-align: center; border-radius: 0;
+        }
+        .res-btn {
+            display: inline-block; background: #5a4a30; color: white;
+            padding: 12px 30px; border-radius: 30px; text-decoration: none;
+            font-size: 14px; margin-top: 15px;
+        }
+
+        /* --- 에디터 스타일 (오른쪽) --- */
+        .input-group { margin-bottom: 25px; }
+        .label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-sans); }
+        textarea { height: 70px; resize: none; }
+        
+        .btn-apply {
+            width: 100%; padding: 15px; background: var(--primary); color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;
+        }
+        .btn-apply:hover { background: #c08e5e; }
+
+    </style>
+</head>
+<body>
+
+<div class="builder-wrapper">
+    <div class="preview-pane">
+        <div class="mobile-frame" id="app-root">
+            </div>
+    </div>
+
+    <div class="editor-pane">
+        <div class="editor-header">
+            <span>BEAUTY SHOP EDITOR</span>
+        </div>
+        
+        <div class="editor-scroll">
+            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">1. 브랜드 설정</div>
+            <div class="input-group">
+                <div class="label">샵 이름 (Logo)</div>
+                <input type="text" id="in-logo" value="Lumière Skin">
+            </div>
+            <div class="input-group">
+                <div class="label">메인 카피 (Hero Title)</div>
+                <textarea id="in-hero-title">당신의 피부가 기억하는<br>가장 빛나는 순간</textarea>
+            </div>
+            <div class="input-group">
+                <div class="label">서브 카피</div>
+                <input type="text" id="in-hero-sub" value="Premium Aesthetic & Spa">
+            </div>
+            
+            <hr style="border:0; border-top:1px solid #eee; margin: 30px 0;">
+
+            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">2. 브랜드 철학</div>
+            <div class="input-group">
+                <div class="label">소개 타이틀</div>
+                <input type="text" id="in-intro-title" value="Our Philosophy">
+            </div>
+            <div class="input-group">
+                <div class="label">소개 내용</div>
+                <textarea id="in-intro-desc" style="height:100px;">획일화된 관리가 아닌, 당신만을 위한 1:1 맞춤형 퍼스널 케어를 지향합니다. 최상급 제품과 섬세한 테크닉으로 본연의 아름다움을 찾아드립니다.</textarea>
+            </div>
+
+            <hr style="border:0; border-top:1px solid #eee; margin: 30px 0;">
+
+            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">3. 대표 프로그램</div>
+            
+            <div style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <div class="label">프로그램 1 이름</div>
+                <input type="text" id="in-prog1-name" value="하이드라 물광 케어">
+                <div class="label" style="margin-top:10px;">설명</div>
+                <input type="text" id="in-prog1-desc" value="즉각적인 수분 공급으로 속건조 해결">
+                <div class="label" style="margin-top:10px;">가격 표기</div>
+                <input type="text" id="in-prog1-price" value="1회 80,000원">
+            </div>
+
+            <div style="background:#f9f9f9; padding:15px; border-radius:8px;">
+                <div class="label">프로그램 2 이름</div>
+                <input type="text" id="in-prog2-name" value="V라인 윤곽 리프팅">
+                <div class="label" style="margin-top:10px;">설명</div>
+                <input type="text" id="in-prog2-desc" value="처진 라인을 정리하는 시그니처 관리">
+                <div class="label" style="margin-top:10px;">가격 표기</div>
+                <input type="text" id="in-prog2-price" value="1회 120,000원">
+            </div>
+
+        </div>
+
+        <div class="save-area">
+            <button class="btn-apply" onclick="updateWebsite()">✨ 수정사항 저장 및 반영</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // [초기 데이터: 실제로는 DB에서 가져오는 값]
+    let shopData = {
+        logo: "Lumière Skin",
+        // 무료 이미지 소스 (Unsplash) 사용
+        heroImage: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        heroTitle: "당신의 피부가 기억하는<br>가장 빛나는 순간",
+        heroSub: "Premium Aesthetic & Spa",
+        introTitle: "Our Philosophy",
+        introDesc: "획일화된 관리가 아닌, 당신만을 위한 1:1 맞춤형 퍼스널 케어를 지향합니다. 최상급 제품과 섬세한 테크닉으로 본연의 아름다움을 찾아드립니다.",
+        programs: [
+            { 
+                name: "하이드라 물광 케어", 
+                desc: "즉각적인 수분 공급으로 속건조 해결", 
+                price: "1회 80,000원",
+                img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
+            },
+            { 
+                name: "V라인 윤곽 리프팅", 
+                desc: "처진 라인을 정리하는 시그니처 관리", 
+                price: "1회 120,000원", 
+                img: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
+            }
+        ]
+    };
+
+    // 1. 페이지 로드 시 렌더링
+    window.onload = function() {
+        render();
+    };
+
+    // 2. 화면 그리기 함수 (Render)
+    function render() {
+        const root = document.getElementById('app-root');
+        
+        let html = `
+            <header class="beauty-header">
+                <div class="shop-logo">${shopData.logo}</div>
+            </header>
+
+            <section class="hero-banner" style="background-image: url('${shopData.heroImage}')">
+                <div class="hero-overlay"></div>
+                <div class="hero-text">
+                    <div class="hero-title">${shopData.heroTitle}</div>
+                    <div class="hero-sub">${shopData.heroSub}</div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h3 class="section-title">${shopData.introTitle}</h3>
+                <p class="intro-text">${shopData.introDesc}</p>
+            </section>
+
+            <section class="section" style="background:#fcfcfc;">
+                <h3 class="section-title">Special Program</h3>
+                
+                ${shopData.programs.map(prog => `
+                    <div class="program-card">
+                        <img src="${prog.img}" class="program-img">
+                        <div class="program-info">
+                            <h4>${prog.name}</h4>
+                            <p>${prog.desc}</p>
+                            <div class="program-price">${prog.price}</div>
+                        </div>
+                    </div>
+                `).join('')}
+
+            </section>
+
+            <section class="reservation-box">
+                <h3 style="margin:0 0 10px 0; font-family:var(--font-serif);">Reservation</h3>
+                <p style="margin:0; font-size:14px; opacity:0.8;">100% 예약제로 운영됩니다.</p>
+                <a href="#" class="res-btn">카카오톡 예약문의</a>
+            </section>
+            
+            <footer style="padding:20px; text-align:center; color:#999; font-size:11px;">
+                © 2024 ${shopData.logo}. All rights reserved.
+            </footer>
+        `;
+
+        root.innerHTML = html;
+    }
+
+    // 3. 업데이트 함수 (Save Logic)
+    function updateWebsite() {
+        // 입력된 값 가져오기
+        shopData.logo = document.getElementById('in-logo').value;
+        shopData.heroTitle = document.getElementById('in-hero-title').value.replace(/\n/g, "<br>");
+        shopData.heroSub = document.getElementById('in-hero-sub').value;
+        shopData.introTitle = document.getElementById('in-intro-title').value;
+        shopData.introDesc = document.getElementById('in-intro-desc').value;
+        
+        // 프로그램 데이터 업데이트
+        shopData.programs[0].name = document.getElementById('in-prog1-name').value;
+        shopData.programs[0].desc = document.getElementById('in-prog1-desc').value;
+        shopData.programs[0].price = document.getElementById('in-prog1-price').value;
+        
+        shopData.programs[1].name = document.getElementById('in-prog2-name').value;
+        shopData.programs[1].desc = document.getElementById('in-prog2-desc').value;
+        shopData.programs[1].price = document.getElementById('in-prog2-price').value;
+
+        // 다시 그리기
+        render();
+        alert("✅ 디자인이 저장되었습니다.");
+    }
+
+</script>
+
+</body>
+</html>
