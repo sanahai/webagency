@@ -3,289 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beauty Shop Landing Builder</title>
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <title>Lumière Skin | 프리미엄 에스테틱</title>
+    
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ============================
-           1. 스타일링 (Design System)
-           ============================ */
+        /* =========================================
+           1. CSS Variables & Reset
+           ========================================= */
         :root {
-            --primary: #d4a373; /* 고급스러운 베이지 골드 */
-            --primary-light: #faedcd;
-            --text-dark: #333333;
-            --text-gray: #666666;
-            --bg-body: #f3f4f6;
+            --primary: #c5a065; /* 샴페인 골드 */
+            --primary-dark: #a68b5e;
+            --bg-cream: #fcfbf9; /* 아주 연한 크림색 */
             --bg-white: #ffffff;
+            --text-main: #222222;
+            --text-sub: #555555;
+            --text-light: #888888;
             --font-serif: 'Ibarra Real Nova', serif;
             --font-sans: 'Pretendard', sans-serif;
+            --max-width: 1100px;
         }
 
-        body { margin: 0; height: 100vh; display: flex; overflow: hidden; font-family: var(--font-sans); background: var(--bg-body); }
-        * { box-sizing: border-box; }
-
-        /* --- 레이아웃 분할 --- */
-        .builder-wrapper { display: flex; width: 100%; height: 100%; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* 왼쪽: 미리보기 영역 */
-        .preview-pane {
-            flex: 6; padding: 40px; background: #e0e0e0;
-            display: flex; justify-content: center; overflow-y: auto;
-        }
-        
-        .mobile-frame {
-            width: 100%; max-width: 480px; /* 모바일/앱 뷰 느낌 */
-            background: white; min-height: 1000px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-radius: 20px; overflow: hidden; position: relative;
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-main);
+            background-color: var(--bg-cream);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* 오른쪽: 에디터 영역 */
-        .editor-pane {
-            flex: 4; background: white; border-left: 1px solid #ccc;
-            display: flex; flex-direction: column; z-index: 10;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+        
+        /* 스크롤 애니메이션 클래스 */
+        .fade-in-section { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; will-change: opacity, visibility; visibility: hidden; }
+        .fade-in-section.is-visible { opacity: 1; transform: none; visibility: visible; }
+
+        /* =========================================
+           2. Header & Navigation
+           ========================================= */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 15px 0; transition: 0.3s;
         }
-        .editor-header { padding: 20px; background: #222; color: white; font-weight: bold; display: flex; justify-content: space-between; }
-        .editor-scroll { padding: 30px; overflow-y: auto; flex: 1; }
-        .save-area { padding: 20px; border-top: 1px solid #eee; background: #f9f9f9; }
-
-        /* --- 뷰티샵 템플릿 디자인 (왼쪽 화면 내부) --- */
-        
-        /* 1. 헤더 & 히어로 */
-        .beauty-header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .shop-logo { font-family: var(--font-serif); font-size: 22px; font-weight: 600; color: var(--text-dark); letter-spacing: 1px; }
-        
-        .hero-banner {
-            height: 350px; background-size: cover; background-position: center;
-            position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+        .nav-container {
+            max-width: var(--max-width); margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px;
         }
-        .hero-overlay { background: rgba(0,0,0,0.3); position: absolute; top:0; left:0; width:100%; height:100%; }
-        .hero-text { position: relative; color: white; padding: 20px; z-index: 2; }
-        .hero-title { font-family: var(--font-serif); font-size: 32px; margin-bottom: 10px; font-weight: 400; line-height: 1.2; }
-        .hero-sub { font-size: 14px; opacity: 0.9; font-weight: 300; letter-spacing: 1px; }
-
-        /* 2. 철학 (Introduction) */
-        .section { padding: 40px 30px; }
-        .section-title { font-family: var(--font-serif); font-size: 24px; color: var(--text-dark); margin-bottom: 30px; text-align: center; position: relative; }
-        .section-title::after { content:''; display: block; width: 40px; height: 1px; background: var(--primary); margin: 15px auto 0; }
+        .logo {
+            font-family: var(--font-serif); font-size: 24px; font-weight: 600;
+            color: var(--text-main); letter-spacing: 0.5px;
+        }
+        .nav-menu { display: flex; gap: 40px; }
+        .nav-menu li a { font-size: 15px; font-weight: 500; color: var(--text-sub); }
+        .nav-menu li a:hover { color: var(--primary); }
         
-        .intro-text { text-align: center; color: var(--text-gray); font-size: 15px; line-height: 1.8; word-break: keep-all; }
+        .btn-reserve {
+            padding: 10px 24px; background-color: var(--primary); color: white;
+            border-radius: 30px; font-size: 14px; font-weight: 600;
+        }
+        .btn-reserve:hover { background-color: var(--primary-dark); }
 
-        /* 3. 프로그램 (Services) */
+        /* 모바일 메뉴 버튼 (PC에선 숨김) */
+        .mobile-menu-btn { display: none; font-size: 24px; cursor: pointer; }
+
+        /* =========================================
+           3. Hero Section
+           ========================================= */
+        .hero {
+            height: 100vh; min-height: 600px;
+            background: url('https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover;
+            position: relative;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero::after {
+            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.3); /* 이미지 어둡게 처리 */
+        }
+        .hero-content { position: relative; z-index: 1; color: white; padding: 20px; }
+        .hero-subtitle {
+            font-size: 16px; letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 20px; opacity: 0.9;
+        }
+        .hero-title {
+            font-family: var(--font-serif); font-size: 56px; font-weight: 400;
+            line-height: 1.2; margin-bottom: 30px;
+        }
+        .hero-btn {
+            display: inline-block; padding: 15px 40px;
+            border: 1px solid white; color: white; font-size: 16px;
+            transition: 0.3s; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+        }
+        .hero-btn:hover { background: white; color: var(--text-main); }
+
+        /* =========================================
+           4. Sections Common
+           ========================================= */
+        section { padding: 100px 20px; }
+        .container { max-width: var(--max-width); margin: 0 auto; }
+        
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-tag { color: var(--primary); font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; display: block;}
+        .section-title { font-family: var(--font-serif); font-size: 36px; color: var(--text-main); margin-bottom: 15px; }
+        .section-desc { color: var(--text-sub); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+        /* =========================================
+           5. Philosophy (About)
+           ========================================= */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .about-img { border-radius: 10px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .about-text h3 { font-size: 28px; margin-bottom: 20px; font-family: var(--font-serif); }
+        .about-text p { margin-bottom: 20px; color: var(--text-sub); }
+        .check-list li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text-main); font-weight: 500; }
+        .check-list i { color: var(--primary); }
+
+        /* =========================================
+           6. Programs
+           ========================================= */
+        .program-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .program-card {
-            display: flex; gap: 15px; margin-bottom: 20px;
-            background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px;
+            background: var(--bg-white); border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid transparent;
+        }
+        .program-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .p-img-box { height: 250px; overflow: hidden; }
+        .p-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .program-card:hover .p-img-box img { transform: scale(1.05); }
+        
+        .p-content { padding: 30px; text-align: center; }
+        .p-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
+        .p-desc { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; }
+        .p-price { font-size: 18px; color: var(--primary); font-weight: 700; }
+        .p-sub-price { font-size: 13px; color: #bbb; text-decoration: line-through; margin-left: 5px; font-weight: 400; }
+
+        /* =========================================
+           7. Reviews
+           ========================================= */
+        .reviews-bg { background-color: #f2efe9; }
+        .review-slider { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .review-slider::-webkit-scrollbar { height: 6px; }
+        .review-slider::-webkit-scrollbar-thumb { background: #dcdcdc; border-radius: 10px; }
+        
+        .review-card {
+            min-width: 320px; background: white; padding: 30px; border-radius: 10px;
+            scroll-snap-align: center; border: 1px solid rgba(0,0,0,0.05);
+        }
+        .stars { color: #f1c40f; margin-bottom: 15px; }
+        .r-text { font-size: 15px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.6; }
+        .r-author { font-weight: bold; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .r-avatar { width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999; }
+
+        /* =========================================
+           8. FAQ (Accordion)
+           ========================================= */
+        .faq-list { max-width: 800px; margin: 0 auto; }
+        .accordion-item { border-bottom: 1px solid #ddd; }
+        .accordion-header {
+            padding: 25px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-size: 18px; font-weight: 600; color: var(--text-main);
+        }
+        .accordion-header:hover { color: var(--primary); }
+        .accordion-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            color: var(--text-sub); font-size: 15px; line-height: 1.7;
+        }
+        .accordion-body p { padding-bottom: 25px; }
+        
+        .accordion-item.active .accordion-body { max-height: 200px; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-icon { transition: 0.3s; font-size: 14px; color: #aaa; }
+
+        /* =========================================
+           9. Location & Footer
+           ========================================= */
+        .footer { background: #222; color: #fff; padding: 60px 20px 30px; }
+        .footer-content {
+            max-width: var(--max-width); margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+        }
+        .f-logo { font-family: var(--font-serif); font-size: 24px; margin-bottom: 20px; display: inline-block;}
+        .f-info p { margin-bottom: 10px; font-size: 14px; color: #aaa; }
+        .f-info i { width: 20px; text-align: center; margin-right: 10px; }
+        
+        .f-map { height: 250px; background: #333; border-radius: 10px; overflow: hidden; position: relative;}
+        /* 실제 지도 대신 이미지 사용 */
+        .f-map img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .f-bottom {
+            max-width: var(--max-width); margin: 50px auto 0; padding-top: 20px;
+            border-top: 1px solid #333; text-align: center; font-size: 12px; color: #666;
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed; bottom: 30px; right: 30px; z-index: 999;
+            background: #fae100; color: #3c1e1e; font-weight: bold;
+            padding: 15px 25px; border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 10px;
             transition: 0.3s;
         }
-        .program-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #eee; flex-shrink: 0; }
-        .program-info h4 { margin: 0 0 5px 0; font-size: 16px; color: var(--text-dark); }
-        .program-info p { margin: 0; font-size: 13px; color: #888; line-height: 1.5; }
-        .program-price { font-weight: bold; color: var(--primary); margin-top: 8px; font-size: 14px; }
+        .floating-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 
-        /* 4. 예약안내 (Callout) */
-        .reservation-box {
-            background-color: var(--primary-light); color: #5a4a30;
-            padding: 30px; text-align: center; border-radius: 0;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 36px; }
+            .about-grid { grid-template-columns: 1fr; }
+            .nav-menu { display: none; } /* 모바일에서 메뉴 숨김 */
+            .mobile-menu-btn { display: block; }
+            .footer-content { grid-template-columns: 1fr; }
         }
-        .res-btn {
-            display: inline-block; background: #5a4a30; color: white;
-            padding: 12px 30px; border-radius: 30px; text-decoration: none;
-            font-size: 14px; margin-top: 15px;
-        }
-
-        /* --- 에디터 스타일 (오른쪽) --- */
-        .input-group { margin-bottom: 25px; }
-        .label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px; }
-        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-sans); }
-        textarea { height: 70px; resize: none; }
-        
-        .btn-apply {
-            width: 100%; padding: 15px; background: var(--primary); color: white;
-            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;
-        }
-        .btn-apply:hover { background: #c08e5e; }
-
     </style>
 </head>
 <body>
 
-<div class="builder-wrapper">
-    <div class="preview-pane">
-        <div class="mobile-frame" id="app-root">
-            </div>
-    </div>
-
-    <div class="editor-pane">
-        <div class="editor-header">
-            <span>BEAUTY SHOP EDITOR</span>
-        </div>
-        
-        <div class="editor-scroll">
-            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">1. 브랜드 설정</div>
-            <div class="input-group">
-                <div class="label">샵 이름 (Logo)</div>
-                <input type="text" id="in-logo" value="Lumière Skin">
-            </div>
-            <div class="input-group">
-                <div class="label">메인 카피 (Hero Title)</div>
-                <textarea id="in-hero-title">당신의 피부가 기억하는<br>가장 빛나는 순간</textarea>
-            </div>
-            <div class="input-group">
-                <div class="label">서브 카피</div>
-                <input type="text" id="in-hero-sub" value="Premium Aesthetic & Spa">
-            </div>
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">Lumière Skin</a>
             
-            <hr style="border:0; border-top:1px solid #eee; margin: 30px 0;">
+            <ul class="nav-menu">
+                <li><a href="#about">브랜드 소개</a></li>
+                <li><a href="#program">프로그램</a></li>
+                <li><a href="#review">고객후기</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
 
-            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">2. 브랜드 철학</div>
-            <div class="input-group">
-                <div class="label">소개 타이틀</div>
-                <input type="text" id="in-intro-title" value="Our Philosophy">
-            </div>
-            <div class="input-group">
-                <div class="label">소개 내용</div>
-                <textarea id="in-intro-desc" style="height:100px;">획일화된 관리가 아닌, 당신만을 위한 1:1 맞춤형 퍼스널 케어를 지향합니다. 최상급 제품과 섬세한 테크닉으로 본연의 아름다움을 찾아드립니다.</textarea>
-            </div>
+            <a href="#" class="btn-reserve">예약 문의</a>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
 
-            <hr style="border:0; border-top:1px solid #eee; margin: 30px 0;">
+    <section class="hero">
+        <div class="hero-content fade-in-section">
+            <div class="hero-subtitle">Premium Aesthetic & Spa</div>
+            <h1 class="hero-title">당신의 피부가 기억하는<br>가장 빛나는 순간</h1>
+            <a href="#program" class="hero-btn">프로그램 보기</a>
+        </div>
+    </section>
 
-            <div style="font-weight:bold; margin-bottom:15px; color:#d4a373;">3. 대표 프로그램</div>
-            
-            <div style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:15px;">
-                <div class="label">프로그램 1 이름</div>
-                <input type="text" id="in-prog1-name" value="하이드라 물광 케어">
-                <div class="label" style="margin-top:10px;">설명</div>
-                <input type="text" id="in-prog1-desc" value="즉각적인 수분 공급으로 속건조 해결">
-                <div class="label" style="margin-top:10px;">가격 표기</div>
-                <input type="text" id="in-prog1-price" value="1회 80,000원">
-            </div>
-
-            <div style="background:#f9f9f9; padding:15px; border-radius:8px;">
-                <div class="label">프로그램 2 이름</div>
-                <input type="text" id="in-prog2-name" value="V라인 윤곽 리프팅">
-                <div class="label" style="margin-top:10px;">설명</div>
-                <input type="text" id="in-prog2-desc" value="처진 라인을 정리하는 시그니처 관리">
-                <div class="label" style="margin-top:10px;">가격 표기</div>
-                <input type="text" id="in-prog2-price" value="1회 120,000원">
-            </div>
-
+    <section id="about" class="container fade-in-section">
+        <div class="section-header">
+            <span class="section-tag">About Us</span>
+            <h2 class="section-title">본연의 아름다움을 찾다</h2>
+            <p class="section-desc">획일화된 공장형 관리가 아닌, 개인의 피부 컨디션에 맞춘 1:1 퍼스널 케어를 지향합니다.</p>
         </div>
 
-        <div class="save-area">
-            <button class="btn-apply" onclick="updateWebsite()">✨ 수정사항 저장 및 반영</button>
+        <div class="about-grid">
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1000&auto=format&fit=crop" alt="Skin Care">
+            </div>
+            <div class="about-text">
+                <h3>Philosophy</h3>
+                <p>르미에르 스킨은 고객님 한 분 한 분의 피부 고민을 깊이 있게 상담하고, 근본적인 원인을 찾아 해결합니다. 프리미엄 제품과 숙련된 테라피스트의 손길로 차원이 다른 힐링을 경험하세요.</p>
+                <ul class="check-list">
+                    <li><i class="fas fa-check-circle"></i> 100% 예약제 프라이빗 1인실</li>
+                    <li><i class="fas fa-check-circle"></i> 유럽 정통 프리미엄 에스테틱 제품 사용</li>
+                    <li><i class="fas fa-check-circle"></i> 위생적인 일회용 해면 사용</li>
+                </ul>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
 
-<script>
-    // [초기 데이터: 실제로는 DB에서 가져오는 값]
-    let shopData = {
-        logo: "Lumière Skin",
-        // 무료 이미지 소스 (Unsplash) 사용
-        heroImage: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-        heroTitle: "당신의 피부가 기억하는<br>가장 빛나는 순간",
-        heroSub: "Premium Aesthetic & Spa",
-        introTitle: "Our Philosophy",
-        introDesc: "획일화된 관리가 아닌, 당신만을 위한 1:1 맞춤형 퍼스널 케어를 지향합니다. 최상급 제품과 섬세한 테크닉으로 본연의 아름다움을 찾아드립니다.",
-        programs: [
-            { 
-                name: "하이드라 물광 케어", 
-                desc: "즉각적인 수분 공급으로 속건조 해결", 
-                price: "1회 80,000원",
-                img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
-            },
-            { 
-                name: "V라인 윤곽 리프팅", 
-                desc: "처진 라인을 정리하는 시그니처 관리", 
-                price: "1회 120,000원", 
-                img: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
-            }
-        ]
-    };
+    <section id="program" style="background-color: #f7f5f2;">
+        <div class="container fade-in-section">
+            <div class="section-header">
+                <span class="section-tag">Our Programs</span>
+                <h2 class="section-title">시그니처 관리</h2>
+            </div>
 
-    // 1. 페이지 로드 시 렌더링
-    window.onload = function() {
-        render();
-    };
-
-    // 2. 화면 그리기 함수 (Render)
-    function render() {
-        const root = document.getElementById('app-root');
-        
-        let html = `
-            <header class="beauty-header">
-                <div class="shop-logo">${shopData.logo}</div>
-            </header>
-
-            <section class="hero-banner" style="background-image: url('${shopData.heroImage}')">
-                <div class="hero-overlay"></div>
-                <div class="hero-text">
-                    <div class="hero-title">${shopData.heroTitle}</div>
-                    <div class="hero-sub">${shopData.heroSub}</div>
-                </div>
-            </section>
-
-            <section class="section">
-                <h3 class="section-title">${shopData.introTitle}</h3>
-                <p class="intro-text">${shopData.introDesc}</p>
-            </section>
-
-            <section class="section" style="background:#fcfcfc;">
-                <h3 class="section-title">Special Program</h3>
-                
-                ${shopData.programs.map(prog => `
-                    <div class="program-card">
-                        <img src="${prog.img}" class="program-img">
-                        <div class="program-info">
-                            <h4>${prog.name}</h4>
-                            <p>${prog.desc}</p>
-                            <div class="program-price">${prog.price}</div>
-                        </div>
+            <div class="program-grid">
+                <div class="program-card">
+                    <div class="p-img-box">
+                        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" alt="Moisture">
                     </div>
-                `).join('')}
+                    <div class="p-content">
+                        <div class="p-title">하이드라 물광 케어</div>
+                        <div class="p-desc">속건조를 해결하고 즉각적인 수분을 공급하여<br>투명하게 빛나는 피부를 완성합니다.</div>
+                        <div class="p-price">80,000원 <span class="p-sub-price">110,000원</span></div>
+                    </div>
+                </div>
 
-            </section>
+                <div class="program-card">
+                    <div class="p-img-box">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop" alt="Lifting">
+                    </div>
+                    <div class="p-content">
+                        <div class="p-title">V라인 윤곽 리프팅</div>
+                        <div class="p-desc">처진 턱선과 이중턱을 정리하고<br>탄력 있는 페이스 라인을 디자인합니다.</div>
+                        <div class="p-price">120,000원</div>
+                    </div>
+                </div>
 
-            <section class="reservation-box">
-                <h3 style="margin:0 0 10px 0; font-family:var(--font-serif);">Reservation</h3>
-                <p style="margin:0; font-size:14px; opacity:0.8;">100% 예약제로 운영됩니다.</p>
-                <a href="#" class="res-btn">카카오톡 예약문의</a>
-            </section>
+                <div class="program-card">
+                    <div class="p-img-box">
+                        <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=800&auto=format&fit=crop" alt="Acne">
+                    </div>
+                    <div class="p-content">
+                        <div class="p-title">트러블 진정 케어</div>
+                        <div class="p-desc">민감해진 피부를 빠르게 진정시키고<br>피부 장벽을 강화하는 SOS 관리입니다.</div>
+                        <div class="p-price">90,000원</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="review" class="reviews-bg">
+        <div class="container fade-in-section">
+            <div class="section-header">
+                <span class="section-tag">Reviews</span>
+                <h2 class="section-title">생생한 고객 후기</h2>
+            </div>
             
-            <footer style="padding:20px; text-align:center; color:#999; font-size:11px;">
-                © 2024 ${shopData.logo}. All rights reserved.
-            </footer>
-        `;
+            <div class="review-slider">
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="r-text">"원장님 손길이 정말 꼼꼼하세요. 윤곽 관리는 처음인데 1회 만에 라인이 정리된 게 보여서 너무 신기해요! 재티켓팅 하고 갑니다."</p>
+                    <div class="r-author">
+                        <div class="r-avatar">김</div>
+                        <span>김민지님 (윤곽 리프팅)</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="r-text">"속건조가 심해서 화장이 늘 떴는데, 물광 케어 받고 나서 피부가 쫀쫀해졌어요. 샵 분위기도 너무 편안하고 힐링됩니다."</p>
+                    <div class="r-author">
+                        <div class="r-avatar">이</div>
+                        <span>이수진님 (물광 케어)</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="r-text">"웨딩 케어로 방문했습니다. 데콜테 마사지까지 너무 시원하게 풀어주셔서 승모근 라인이 예뻐졌어요. 강추합니다!"</p>
+                    <div class="r-author">
+                        <div class="r-avatar">P</div>
+                        <span>Park Ji-yoon님 (웨딩 케어)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        root.innerHTML = html;
-    }
-
-    // 3. 업데이트 함수 (Save Logic)
-    function updateWebsite() {
-        // 입력된 값 가져오기
-        shopData.logo = document.getElementById('in-logo').value;
-        shopData.heroTitle = document.getElementById('in-hero-title').value.replace(/\n/g, "<br>");
-        shopData.heroSub = document.getElementById('in-hero-sub').value;
-        shopData.introTitle = document.getElementById('in-intro-title').value;
-        shopData.introDesc = document.getElementById('in-intro-desc').value;
+    <section id="faq" class="container fade-in-section">
+        <div class="section-header">
+            <h2 class="section-title">자주 묻는 질문</h2>
+        </div>
         
-        // 프로그램 데이터 업데이트
-        shopData.programs[0].name = document.getElementById('in-prog1-name').value;
-        shopData.programs[0].desc = document.getElementById('in-prog1-desc').value;
-        shopData.programs[0].price = document.getElementById('in-prog1-price').value;
-        
-        shopData.programs[1].name = document.getElementById('in-prog2-name').value;
-        shopData.programs[1].desc = document.getElementById('in-prog2-desc').value;
-        shopData.programs[1].price = document.getElementById('in-prog2-price').value;
+        <div class="faq-list">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleFaq(this)">
+                    당일 예약도 가능한가요?
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>네, 예약 스케줄에 비어있는 시간이 있다면 당일 예약도 가능합니다. 다만 원활한 이용을 위해 가급적 2-3일 전에 예약해 주시는 것을 권장 드립니다.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleFaq(this)">
+                    주차는 가능한가요?
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>네, 건물 내 지하 주차장을 무료로 이용하실 수 있습니다. 시술 시간 동안 주차권이 지원됩니다.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleFaq(this)">
+                    임산부 관리도 있나요?
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>네, 임산부 전용 천연 오일을 사용하는 산전/산후 관리 프로그램이 준비되어 있습니다. 안정기 이후부터 편안하게 받으실 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // 다시 그리기
-        render();
-        alert("✅ 디자인이 저장되었습니다.");
-    }
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="f-left">
+                <div class="f-logo">Lumière Skin</div>
+                <div class="f-info">
+                    <p><i class="fas fa-map-marker-alt"></i> 서울 강남구 도산대로 123, 르미에르 빌딩 3F</p>
+                    <p><i class="fas fa-phone-alt"></i> 02-1234-5678</p>
+                    <p><i class="far fa-clock"></i> 평일 10:00 - 21:00 (토요일 17:00 마감)</p>
+                    <p><i class="far fa-calendar-times"></i> 매주 일요일, 공휴일 휴무</p>
+                </div>
+            </div>
+            <div class="f-map">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop" alt="Map Placeholder">
+                <div style="position: absolute; bottom: 10px; left: 10px; background: white; color: black; padding: 5px 10px; font-size: 12px; border-radius: 4px; font-weight: bold;">오시는 길</div>
+            </div>
+        </div>
+        <div class="f-bottom">
+            &copy; 2024 Lumière Skin. All Rights Reserved. Designed by You.
+        </div>
+    </footer>
 
-</script>
+    <a href="#" class="floating-btn">
+        <i class="fas fa-comment"></i> 카카오톡 상담
+    </a>
 
+    <script>
+        // 1. FAQ Accordion Logic
+        function toggleFaq(header) {
+            const item = header.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // 모든 아코디언 닫기
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+            // 클릭한 것만 열기 (이미 열려있던게 아니면)
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // 2. Scroll Animation Observer
+        const observerOptions = {
+            threshold: 0.2 // 요소가 20% 보일 때 작동
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // 한 번만 실행
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+
+    </script>
 </body>
 </html>
