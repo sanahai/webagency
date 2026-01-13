@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Beauty Builder</title>
+    
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. 빌더 UI 스타일 (관리자 화면)
+           ========================================= */
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; display: flex; height: 100vh; overflow: hidden; background: #1a1a1a; }
+
+        /* [왼쪽] 미리보기 영역 */
+        .preview-area {
+            flex: 6.5; 
+            background-color: #e0e0e0;
+            display: flex; justify-content: center; 
+            padding: 0; /* 꽉 찬 화면을 위해 패딩 제거 */
+            position: relative;
+        }
+        
+        .website-frame {
+            width: 100%; height: 100%;
+            background: white;
+            overflow-y: auto; overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* [오른쪽] 에디터 패널 */
+        .editor-area {
+            flex: 3.5; 
+            background-color: #2c2c2c; color: #eee;
+            display: flex; flex-direction: column;
+            border-left: 1px solid #444; min-width: 400px;
+        }
+
+        .editor-header {
+            padding: 20px; background: #1f1f1f; border-bottom: 1px solid #444;
+            font-weight: bold; font-size: 18px; color: #c5a065;
+        }
+        
+        .editor-scroll { flex: 1; overflow-y: auto; padding: 20px; }
+
+        /* 에디터 컴포넌트 */
+        .section-group { background: #383838; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .group-title { 
+            font-size: 15px; font-weight: bold; margin-bottom: 15px; 
+            border-bottom: 1px solid #555; padding-bottom: 8px; color: white; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .input-wrap { margin-bottom: 15px; }
+        .label { font-size: 12px; color: #aaa; margin-bottom: 6px; display: block; }
+        
+        input[type="text"], textarea, select {
+            width: 100%; background: #444; border: 1px solid #555; color: white;
+            padding: 10px; border-radius: 4px; font-size: 13px; font-family: 'Pretendard';
+        }
+        input:focus, textarea:focus { outline: none; border-color: #c5a065; background: #505050; }
+        textarea { resize: vertical; min-height: 70px; }
+
+        /* 파일 업로드 버튼 커스텀 */
+        input[type="file"] { font-size: 12px; margin-top: 5px; cursor: pointer; }
+
+        /* 리스트 관리 (프로그램, 리뷰 등) */
+        .list-item { 
+            background: #4a4a4a; padding: 15px; border-radius: 6px; margin-bottom: 10px; 
+            position: relative; border-left: 3px solid #c5a065;
+        }
+        .btn-delete {
+            position: absolute; top: 10px; right: 10px;
+            background: #ff4d4d; color: white; border: none; border-radius: 4px;
+            padding: 4px 8px; font-size: 11px; cursor: pointer;
+        }
+        .btn-add {
+            width: 100%; padding: 10px; background: #444; border: 1px dashed #777;
+            color: #aaa; cursor: pointer; border-radius: 6px; transition: 0.2s;
+        }
+        .btn-add:hover { background: #505050; color: white; border-color: #c5a065; }
+
+        /* 하단 저장 버튼 */
+        .save-bar { padding: 20px; background: #1f1f1f; border-top: 1px solid #444; }
+        .btn-save {
+            width: 100%; padding: 16px; background: #c5a065; color: #fff;
+            border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); transition: 0.2s;
+        }
+        .btn-save:hover { background: #b08d55; }
+
+        /* 유료 기능 태그 */
+        .pro-badge { 
+            background: #333; color: #ffd700; border: 1px solid #ffd700; 
+            font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; 
+        }
+
+        /* =========================================
+           2. 웹사이트 내부 스타일 (The Design)
+           ========================================= */
+        .website-frame {
+            --primary: #c5a065; --primary-dark: #a68b5e;
+            --bg-cream: #fcfbf9; --text-main: #222; --text-sub: #555;
+            --font-serif: 'Ibarra Real Nova', serif;
+            --font-sans: 'Pretendard', sans-serif;
+            --max-width: 1100px;
+        }
+        /* 내부 요소 CSS (이전 완성본과 동일한 클래스 구조) */
+        .w-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+        
+        .w-header { 
+            position: sticky; top: 0; background: rgba(255,255,255,0.95); z-index: 100;
+            padding: 15px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .w-nav { display: flex; justify-content: space-between; align-items: center; }
+        .w-logo { font-family: var(--font-serif); font-size: 24px; font-weight: 600; }
+        .w-menu { display: flex; gap: 30px; font-size: 15px; color: var(--text-sub); }
+        .w-btn-res { background: var(--primary); color: white; padding: 8px 20px; border-radius: 30px; font-size: 14px; text-decoration: none;}
+
+        .w-hero {
+            height: 600px; background-size: cover; background-position: center; position: relative;
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .w-hero::after { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.35); }
+        .w-hero-content { position: relative; z-index: 1; padding: 20px; }
+        .w-hero-title { font-family: var(--font-serif); font-size: 52px; margin: 15px 0 30px; line-height: 1.2; }
+
+        .w-section { padding: 100px 0; }
+        .w-sec-header { text-align: center; margin-bottom: 60px; }
+        .w-tag { color: var(--primary); font-weight: 700; font-size: 13px; text-transform: uppercase; display: block; margin-bottom: 10px;}
+        .w-title { font-family: var(--font-serif); font-size: 36px; margin-bottom: 15px; color: var(--text-main); }
+        .w-desc { color: var(--text-sub); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+        /* About */
+        .w-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .w-about-img img { width: 100%; border-radius: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        
+        /* Program */
+        .w-prog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .w-prog-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .w-prog-img { height: 240px; width: 100%; object-fit: cover; }
+        .w-prog-body { padding: 25px; text-align: center; }
+        .w-prog-price { color: var(--primary); font-weight: bold; font-size: 18px; margin-top: 10px; display: block;}
+
+        /* Review */
+        .w-review-scroller { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; }
+        .w-review-card { min-width: 300px; background: white; padding: 30px; border-radius: 10px; border: 1px solid #eee; }
+        
+        /* FAQ */
+        .w-faq-item { border-bottom: 1px solid #ddd; }
+        .w-faq-head { padding: 20px 0; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; }
+        .w-faq-body { display: none; padding-bottom: 20px; color: var(--text-sub); }
+        .w-faq-item.active .w-faq-body { display: block; }
+
+        /* Footer */
+        .w-footer { background: #222; color: #fff; padding: 60px 0 30px; }
+        .w-foot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .w-foot-map img { width: 100%; height: 250px; object-fit: cover; border-radius: 8px; opacity: 0.8; }
+        
+        /* Kakao Float */
+        .w-kakao { position: fixed; bottom: 30px; right: 30px; background: #fae100; color: #3b1e1e; padding: 15px 25px; border-radius: 50px; font-weight: bold; text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="preview-area">
+        <div class="website-frame" id="website-root">
+            </div>
+    </div>
+
+    <div class="editor-area">
+        <div class="editor-header">🛠️ WEBSITE BUILDER</div>
+        
+        <div class="editor-scroll" id="editor-panel">
+            </div>
+
+        <div class="save-bar">
+            <button class="btn-save" onclick="renderWebsite()">✨ 저장 및 사이트 반영하기</button>
+        </div>
+    </div>
+
+    <script>
+        // ===========================================
+        // 1. 데이터 (State)
+        // ===========================================
+        let siteData = {
+            brand: { name: "Lumière Skin", kakaoLink: "#" },
+            hero: {
+                title: "당신의 피부가 기억하는<br>가장 빛나는 순간",
+                sub: "Premium Aesthetic & Spa",
+                image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=2070&auto=format&fit=crop"
+            },
+            about: {
+                title: "본연의 아름다움을 찾다",
+                desc: "획일화된 공장형 관리가 아닌, 개인의 피부 컨디션에 맞춘 1:1 퍼스널 케어를 지향합니다.",
+                image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1000&auto=format&fit=crop"
+            },
+            programs: [
+                { name: "하이드라 물광 케어", desc: "속건조 해결 및 수분 공급", price: "1회 80,000원", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" },
+                { name: "V라인 윤곽 리프팅", desc: "처진 라인 정리", price: "1회 120,000원", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop" }
+            ],
+            reviews: [
+                { user: "김민지님", text: "원장님 손길이 꼼꼼하세요. 1회 만에 효과 봄!", score: 5 }
+            ],
+            faqs: [
+                { q: "당일 예약 가능한가요?", a: "빈 타임이 있으면 가능하지만 사전 예약을 권장합니다." },
+                { q: "주차는 가능한가요?", a: "건물 내 지하 주차장을 무료로 이용하실 수 있습니다." }
+            ],
+            footer: {
+                address: "서울 강남구 도산대로 123, 르미에르 빌딩 3F",
+                phone: "02-1234-5678",
+                mapType: "image", // image or api
+                mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop"
+            }
+        };
+
+        // ===========================================
+        // 2. 엔진: 에디터 렌더링 (Editor UI)
+        // ===========================================
+        function renderEditor() {
+            const panel = document.getElementById('editor-panel');
+            let html = '';
+
+            // 1) 기본 정보 & 배경
+            html += `
+                <div class="section-group">
+                    <div class="group-title">1. 메인 화면 설정</div>
+                    <div class="input-wrap">
+                        <label class="label">브랜드명 (Logo)</label>
+                        <input type="text" value="${siteData.brand.name}" onchange="siteData.brand.name = this.value">
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">메인 카피</label>
+                        <textarea onchange="siteData.hero.title = this.value.replace(/\\n/g, '<br>')">${siteData.hero.title.replace(/<br>/g, '\n')}</textarea>
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">배경 이미지 교체 (파일 선택)</label>
+                        <input type="file" accept="image/*" onchange="handleImageUpload(this, 'hero', 'image')">
+                    </div>
+                </div>
+            `;
+
+            // 2) About Us (수정 가능하도록 추가)
+            html += `
+                <div class="section-group">
+                    <div class="group-title">2. 브랜드 소개 (About Us)</div>
+                    <div class="input-wrap">
+                        <label class="label">소개 제목</label>
+                        <input type="text" value="${siteData.about.title}" onchange="siteData.about.title = this.value">
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">소개 내용</label>
+                        <textarea onchange="siteData.about.desc = this.value">${siteData.about.desc}</textarea>
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">소개 이미지 교체</label>
+                        <input type="file" accept="image/*" onchange="handleImageUpload(this, 'about', 'image')">
+                    </div>
+                </div>
+            `;
+
+            // 3) 프로그램 관리 (5개 제한 + 유료)
+            html += generateListEditor("3. 프로그램 관리", "programs", 5, 
+                (item, i) => `
+                    <div class="input-wrap"><label class="label">이름</label><input type="text" value="${item.name}" onchange="siteData.programs[${i}].name = this.value"></div>
+                    <div class="input-wrap"><label class="label">가격</label><input type="text" value="${item.price}" onchange="siteData.programs[${i}].price = this.value"></div>
+                    <div class="input-wrap"><label class="label">설명</label><textarea onchange="siteData.programs[${i}].desc = this.value">${item.desc}</textarea></div>
+                    <div class="input-wrap"><label class="label">이미지</label><input type="file" accept="image/*" onchange="handleListImageUpload(this, 'programs', ${i}, 'img')"></div>
+                `
+            );
+
+            // 4) 리뷰 관리 (5개 제한 + 유료)
+            html += generateListEditor("4. 고객 후기", "reviews", 5, 
+                (item, i) => `
+                    <div class="input-wrap"><label class="label">고객명</label><input type="text" value="${item.user}" onchange="siteData.reviews[${i}].user = this.value"></div>
+                    <div class="input-wrap"><label class="label">내용</label><textarea onchange="siteData.reviews[${i}].text = this.value">${item.text}</textarea></div>
+                `
+            );
+
+            // 5) FAQ 관리 (5개 제한 + 유료)
+            html += generateListEditor("5. 자주 묻는 질문", "faqs", 5, 
+                (item, i) => `
+                    <div class="input-wrap"><label class="label">질문(Q)</label><input type="text" value="${item.q}" onchange="siteData.faqs[${i}].q = this.value"></div>
+                    <div class="input-wrap"><label class="label">답변(A)</label><textarea onchange="siteData.faqs[${i}].a = this.value">${item.a}</textarea></div>
+                `
+            );
+
+            // 6) Footer & Map
+            html += `
+                <div class="section-group">
+                    <div class="group-title">6. 하단 정보 & 오시는 길</div>
+                    <div class="input-wrap">
+                        <label class="label">주소</label>
+                        <input type="text" value="${siteData.footer.address}" onchange="siteData.footer.address = this.value">
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">전화번호</label>
+                        <input type="text" value="${siteData.footer.phone}" onchange="siteData.footer.phone = this.value">
+                    </div>
+                    <div class="input-wrap">
+                        <label class="label">카카오톡 상담 링크</label>
+                        <input type="text" value="${siteData.brand.kakaoLink}" placeholder="https://pf.kakao.com/..." onchange="siteData.brand.kakaoLink = this.value">
+                    </div>
+                    
+                    <div style="margin-top:20px; border-top:1px dashed #555; padding-top:15px;">
+                        <label class="label" style="color:#c5a065;">지도 설정</label>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <button onclick="setMapType('image')" style="flex:1; padding:8px; background:${siteData.footer.mapType==='image'?'#c5a065':'#444'}; border:none; color:white; cursor:pointer;">이미지(무료)</button>
+                            <button onclick="alert('API 연동 다이나믹 지도는 추가 결제가 필요합니다.')" style="flex:1; padding:8px; background:#444; border:none; color:#aaa; cursor:pointer;">API지도<span class="pro-badge">유료</span></button>
+                        </div>
+                        ${siteData.footer.mapType === 'image' ? `
+                            <div class="input-wrap">
+                                <label class="label">약도 이미지 업로드</label>
+                                <input type="file" accept="image/*" onchange="handleImageUpload(this, 'footer', 'mapImage')">
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            panel.innerHTML = html;
+        }
+
+        // 리스트 에디터 생성 헬퍼 함수
+        function generateListEditor(title, key, limit, contentCallback) {
+            const list = siteData[key];
+            const count = list.length;
+            let html = `
+                <div class="section-group">
+                    <div class="group-title">
+                        ${title} <span style="font-size:11px; font-weight:normal;">(${count}/${limit}) ${count>=limit?'<span style="color:#ff4d4d">Max</span>':''}</span>
+                    </div>
+            `;
+            
+            list.forEach((item, index) => {
+                html += `
+                    <div class="list-item">
+                        <button class="btn-delete" onclick="deleteItem('${key}', ${index})">삭제</button>
+                        ${contentCallback(item, index)}
+                    </div>
+                `;
+            });
+
+            html += `
+                <button class="btn-add" onclick="addItem('${key}', ${limit})">
+                    + 항목 추가하기 ${count >= limit ? '(유료)' : ''}
+                </button>
+                </div>
+            `;
+            return html;
+        }
+
+
+        // ===========================================
+        // 3. 로직 함수 (Handlers)
+        // ===========================================
+        
+        // 이미지 파일 업로드 처리 (FileReader)
+        function handleImageUpload(input, section, key) {
+            const file = input.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    siteData[section][key] = e.target.result; // Base64 데이터 저장
+                    // 사용자가 즉시 확인하고 싶어할 것이므로 바로 렌더링
+                    renderWebsite(); 
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 리스트 내부 이미지 업로드 처리
+        function handleListImageUpload(input, listKey, index, objKey) {
+            const file = input.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    siteData[listKey][index][objKey] = e.target.result;
+                    renderWebsite();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 아이템 추가 (제한 로직 포함)
+        function addItem(key, limit) {
+            if (siteData[key].length >= limit) {
+                alert(`기본 제공 수량(${limit}개)을 초과했습니다.\n추가하려면 추가 결제가 필요합니다.`);
+                return;
+            }
+            
+            // 기본 템플릿 데이터 추가
+            if (key === 'programs') siteData.programs.push({ name: "새 프로그램", desc: "설명을 입력하세요", price: "가격 미정", img: "https://via.placeholder.com/300" });
+            if (key === 'reviews') siteData.reviews.push({ user: "고객명", text: "후기를 입력하세요", score: 5 });
+            if (key === 'faqs') siteData.faqs.push({ q: "새 질문", a: "답변을 입력하세요" });
+
+            renderEditor(); // 에디터 갱신
+            renderWebsite(); // 뷰어 갱신
+        }
+
+        // 아이템 삭제
+        function deleteItem(key, index) {
+            if(confirm("정말 삭제하시겠습니까?")) {
+                siteData[key].splice(index, 1);
+                renderEditor();
+                renderWebsite();
+            }
+        }
+
+        // 지도 타입 변경
+        function setMapType(type) {
+            siteData.footer.mapType = type;
+            renderEditor();
+            renderWebsite();
+        }
+
+
+        // ===========================================
+        // 4. 엔진: 웹사이트 렌더링 (Viewer)
+        // ===========================================
+        function renderWebsite() {
+            const root = document.getElementById('website-root');
+            
+            const html = `
+                <div class="w-header">
+                    <div class="w-container w-nav">
+                        <div class="w-logo">${siteData.brand.name}</div>
+                        <div class="w-menu">
+                            <span>About</span><span>Program</span><span>Review</span><span>FAQ</span>
+                        </div>
+                        <a href="${siteData.brand.kakaoLink}" target="_blank" class="w-btn-res">예약 문의</a>
+                    </div>
+                </div>
+
+                <div class="w-hero" style="background-image: url('${siteData.hero.image}')">
+                    <div class="w-hero-content">
+                        <div style="font-size:14px; letter-spacing:2px; opacity:0.9; text-transform:uppercase;">${siteData.hero.sub}</div>
+                        <div class="w-hero-title">${siteData.hero.title}</div>
+                    </div>
+                </div>
+
+                <div class="w-section">
+                    <div class="w-container">
+                        <div class="w-sec-header">
+                            <span class="w-tag">Philosophy</span>
+                            <h2 class="w-title">${siteData.about.title}</h2>
+                            <p class="w-desc">${siteData.about.desc}</p>
+                        </div>
+                        <div class="w-about-grid">
+                            <div class="w-about-img"><img src="${siteData.about.image}"></div>
+                            <div>
+                                <h3 style="font-size:24px; font-family:var(--font-serif); margin-bottom:20px;">Premium Touch</h3>
+                                <p style="color:#555; line-height:1.6;">최상의 제품과 기술로 고객님의 피부를 가장 아름다운 상태로 되돌려드립니다. 1:1 맞춤 상담을 통해 꼭 필요한 관리만을 제안합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-section" style="background:var(--bg-cream)">
+                    <div class="w-container">
+                        <div class="w-sec-header">
+                            <span class="w-tag">Programs</span>
+                            <h2 class="w-title">Signature Care</h2>
+                        </div>
+                        <div class="w-prog-grid">
+                            ${siteData.programs.map(p => `
+                                <div class="w-prog-card">
+                                    <img src="${p.img}" class="w-prog-img">
+                                    <div class="w-prog-body">
+                                        <h3 style="font-size:18px; margin:0 0 10px 0;">${p.name}</h3>
+                                        <p style="font-size:14px; color:#666;">${p.desc}</p>
+                                        <span class="w-prog-price">${p.price}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-section">
+                    <div class="w-container">
+                        <div class="w-sec-header"><h2 class="w-title">Reviews</h2></div>
+                        <div class="w-review-scroller">
+                            ${siteData.reviews.map(r => `
+                                <div class="w-review-card">
+                                    <div style="color:#f1c40f; margin-bottom:10px;">★★★★★</div>
+                                    <p style="color:#555; font-size:14px; line-height:1.5; margin-bottom:15px;">"${r.text}"</p>
+                                    <div style="font-weight:bold; font-size:13px;">- ${r.user}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-section" style="background:var(--bg-cream)">
+                    <div class="w-container" style="max-width:800px;">
+                        <div class="w-sec-header"><h2 class="w-title">FAQ</h2></div>
+                        ${siteData.faqs.map(f => `
+                            <div class="w-faq-item">
+                                <div class="w-faq-head" onclick="this.parentElement.classList.toggle('active')">
+                                    ${f.q} <span>▼</span>
+                                </div>
+                                <div class="w-faq-body">${f.a}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="w-footer">
+                    <div class="w-container w-foot-grid">
+                        <div>
+                            <div style="font-family:var(--font-serif); font-size:24px; margin-bottom:20px;">${siteData.brand.name}</div>
+                            <p style="color:#aaa; font-size:14px; margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> ${siteData.footer.address}</p>
+                            <p style="color:#aaa; font-size:14px;"><i class="fas fa-phone-alt"></i> ${siteData.footer.phone}</p>
+                        </div>
+                        <div class="w-foot-map">
+                            ${siteData.footer.mapType === 'image' 
+                                ? `<img src="${siteData.footer.mapImage}">` 
+                                : `<div style="height:250px; background:#333; display:flex; align-items:center; justify-content:center; color:#aaa;">네이버 지도 API 연동 화면 (유료)</div>`
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <a href="${siteData.brand.kakaoLink}" target="_blank" class="w-kakao">
+                    <i class="fas fa-comment"></i> 카카오톡 상담
+                </a>
+            `;
+
+            root.innerHTML = html;
+        }
+
+        // 초기 실행
+        window.onload = function() {
+            renderEditor();
+            renderWebsite();
+        };
+
+    </script>
+</body>
+</html>
