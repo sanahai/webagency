@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Shop Builder</title>
+    
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. 빌더 레이아웃 (좌: 프리뷰, 우: 에디터)
+           ========================================= */
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; display: flex; height: 100vh; overflow: hidden; background: #222; }
+
+        /* 왼쪽: 미리보기 영역 */
+        .preview-area {
+            flex: 7; /* 70% 너비 */
+            background-color: #e0e0e0;
+            display: flex; justify-content: center; align-items: center;
+            padding: 40px; position: relative;
+        }
+        
+        /* 실제 웹사이트가 보여지는 프레임 */
+        .website-frame {
+            width: 100%; height: 100%;
+            background: white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+            border-radius: 4px; overflow-y: auto; overflow-x: hidden;
+            position: relative; scroll-behavior: smooth;
+        }
+
+        /* 오른쪽: 에디터 패널 */
+        .editor-area {
+            flex: 3; /* 30% 너비 */
+            background-color: #2c2c2c;
+            color: #fff;
+            display: flex; flex-direction: column;
+            border-left: 1px solid #444;
+            min-width: 350px;
+        }
+
+        .editor-header {
+            padding: 20px; background: #1f1f1f; border-bottom: 1px solid #444;
+            font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .editor-content {
+            flex: 1; overflow-y: auto; padding: 20px;
+        }
+        .save-bar {
+            padding: 20px; background: #1f1f1f; border-top: 1px solid #444;
+        }
+
+        /* 에디터 스타일 */
+        .edit-group { margin-bottom: 25px; background: #383838; padding: 15px; border-radius: 8px; }
+        .group-title { color: #c5a065; font-size: 14px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        
+        .input-label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; margin-top: 10px; }
+        input[type="text"], textarea {
+            width: 100%; background: #444; border: 1px solid #555; color: white;
+            padding: 10px; border-radius: 4px; font-family: 'Pretendard'; font-size: 13px;
+        }
+        textarea { resize: vertical; min-height: 60px; line-height: 1.4; }
+        input:focus, textarea:focus { outline: none; border-color: #c5a065; background: #505050; }
+
+        .btn-save {
+            width: 100%; padding: 15px; background: #c5a065; color: #fff;
+            border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-save:hover { background: #b08d55; }
+
+        /* 토스트 메시지 */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 12px 30px; border-radius: 30px;
+            font-size: 14px; opacity: 0; transition: 0.5s; pointer-events: none; z-index: 2000;
+        }
+        .toast.show { opacity: 1; bottom: 50px; }
+
+
+        /* =========================================
+           2. 뷰티샵 웹사이트 스타일 (Internal Style)
+           (이전 코드의 CSS를 .website-frame 내부로 스코핑)
+           ========================================= */
+        .website-frame {
+            --primary: #c5a065; 
+            --primary-dark: #a68b5e;
+            --bg-cream: #fcfbf9;
+            --text-main: #222222;
+            --text-sub: #555555;
+            --font-serif: 'Ibarra Real Nova', serif;
+            --font-sans: 'Pretendard', sans-serif;
+        }
+
+        /* 웹사이트 내부 요소들 */
+        .w-header { position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 15px 20px; border-bottom: 1px solid #eee; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .w-logo { font-family: var(--font-serif); font-size: 22px; font-weight: 600; color: var(--text-main); }
+        .w-hero {
+            height: 500px; background-size: cover; background-position: center; position: relative;
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .w-hero::after { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); }
+        .w-hero-content { position: relative; z-index: 1; padding: 20px; }
+        .w-hero h1 { font-family: var(--font-serif); font-size: 42px; margin: 10px 0 20px; font-weight: 400; }
+        
+        .w-section { padding: 80px 40px; background: var(--bg-cream); }
+        .w-title { font-family: var(--font-serif); font-size: 32px; text-align: center; margin-bottom: 10px; color: var(--text-main); }
+        .w-desc { text-align: center; color: var(--text-sub); margin-bottom: 50px; font-size: 15px; }
+
+        .w-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .w-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .w-card img { width: 100%; height: 200px; object-fit: cover; }
+        .w-card-body { padding: 20px; text-align: center; }
+        .w-price { color: var(--primary); font-weight: bold; margin-top: 10px; display: block; }
+
+        .w-footer { background: #333; color: white; padding: 40px; text-align: center; font-size: 13px; }
+        
+        /* 아코디언 */
+        .w-faq-item { border-bottom: 1px solid #ddd; padding: 20px 0; }
+        .w-faq-q { font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; }
+        .w-faq-a { font-size: 14px; color: var(--text-sub); margin-top: 10px; display: none; }
+        .w-faq-item.active .w-faq-a { display: block; }
+
+    </style>
+</head>
+<body>
+
+    <div class="preview-area">
+        <div class="website-frame" id="website-root">
+            </div>
+        <div class="toast" id="toast-msg">✅ 사이트가 성공적으로 업데이트 되었습니다!</div>
+    </div>
+
+    <div class="editor-area">
+        <div class="editor-header">
+            <span>WEB BUILDER</span>
+            <span style="font-size:12px; opacity:0.7;">v2.0 Pro</span>
+        </div>
+
+        <div class="editor-content">
+            <div class="edit-group">
+                <div class="group-title">🏠 기본 정보 & 헤더</div>
+                <div class="input-label">브랜드명 (로고)</div>
+                <input type="text" id="e-logo">
+                <div class="input-label">메인 카피 (Hero Title)</div>
+                <textarea id="e-hero-title"></textarea>
+                <div class="input-label">서브 카피</div>
+                <input type="text" id="e-hero-sub">
+                <div class="input-label">배경 이미지 URL</div>
+                <input type="text" id="e-hero-img">
+            </div>
+
+            <div class="edit-group">
+                <div class="group-title">💆‍♀️ 프로그램 1 설정</div>
+                <div class="input-label">프로그램 이름</div>
+                <input type="text" id="e-prog1-name">
+                <div class="input-label">설명</div>
+                <textarea id="e-prog1-desc"></textarea>
+                <div class="input-label">가격</div>
+                <input type="text" id="e-prog1-price">
+            </div>
+
+            <div class="edit-group">
+                <div class="group-title">💆‍♀️ 프로그램 2 설정</div>
+                <div class="input-label">프로그램 이름</div>
+                <input type="text" id="e-prog2-name">
+                <div class="input-label">설명</div>
+                <textarea id="e-prog2-desc"></textarea>
+                <div class="input-label">가격</div>
+                <input type="text" id="e-prog2-price">
+            </div>
+
+            <div class="edit-group">
+                <div class="group-title">📍 매장 정보 (Footer)</div>
+                <div class="input-label">주소</div>
+                <input type="text" id="e-address">
+                <div class="input-label">전화번호</div>
+                <input type="text" id="e-phone">
+            </div>
+        </div>
+
+        <div class="save-bar">
+            <button class="btn-save" onclick="applyChanges()">사이트 반영하기 (Save)</button>
+        </div>
+    </div>
+
+    <script>
+        // ===========================================
+        // 1. 초기 데이터 (DB 역할)
+        // ===========================================
+        let siteData = {
+            logo: "Lumière Skin",
+            heroTitle: "당신의 피부가 기억하는<br>가장 빛나는 순간",
+            heroSub: "PREMIUM AESTHETIC & SPA",
+            heroImg: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=2070&auto=format&fit=crop",
+            
+            programs: [
+                {
+                    name: "하이드라 물광 케어",
+                    desc: "속건조를 해결하고 즉각적인 수분을 공급하여 투명하게 빛나는 피부를 완성합니다.",
+                    price: "1회 80,000원",
+                    img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop"
+                },
+                {
+                    name: "V라인 윤곽 리프팅",
+                    desc: "처진 턱선과 이중턱을 정리하고 탄력 있는 페이스 라인을 디자인합니다.",
+                    price: "1회 120,000원",
+                    img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=800&auto=format&fit=crop"
+                }
+            ],
+            
+            contact: {
+                address: "서울 강남구 도산대로 123, 르미에르 빌딩 3F",
+                phone: "02-1234-5678"
+            }
+        };
+
+        // ===========================================
+        // 2. 엔진: 데이터 -> HTML 렌더링 (View)
+        // ===========================================
+        function renderWebsite() {
+            const root = document.getElementById('website-root');
+            
+            // 템플릿 리터럴을 사용해 HTML 생성
+            const html = `
+                <div class="w-header">
+                    <div class="w-logo">${siteData.logo}</div>
+                    <div style="font-size:14px; font-weight:bold; color:#c5a065;">예약하기</div>
+                </div>
+
+                <div class="w-hero" style="background-image: url('${siteData.heroImg}')">
+                    <div class="w-hero-content">
+                        <div style="font-size:14px; letter-spacing:2px; margin-bottom:10px; opacity:0.9;">${siteData.heroSub}</div>
+                        <h1>${siteData.heroTitle}</h1>
+                        <div style="display:inline-block; border:1px solid white; padding:10px 30px; margin-top:20px; font-size:14px;">View Program</div>
+                    </div>
+                </div>
+
+                <div class="w-section">
+                    <h2 class="w-title">Signature Program</h2>
+                    <p class="w-desc">고객님을 위한 1:1 맞춤형 솔루션을 제안합니다.</p>
+                    
+                    <div class="w-grid">
+                        ${siteData.programs.map(prog => `
+                            <div class="w-card">
+                                <img src="${prog.img}">
+                                <div class="w-card-body">
+                                    <h3 style="margin:0 0 10px 0; font-size:18px;">${prog.name}</h3>
+                                    <p style="font-size:14px; color:#666; margin-bottom:15px; height:40px; overflow:hidden;">${prog.desc}</p>
+                                    <span class="w-price">${prog.price}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="w-section" style="background:white;">
+                    <h2 class="w-title">FAQ</h2>
+                    <div style="max-width:800px; margin:0 auto;">
+                        <div class="w-faq-item">
+                            <div class="w-faq-q" onclick="toggleFaq(this)">예약은 필수인가요? <span>▼</span></div>
+                            <div class="w-faq-a">네, 저희 샵은 100% 예약제로 운영되고 있습니다.</div>
+                        </div>
+                        <div class="w-faq-item">
+                            <div class="w-faq-q" onclick="toggleFaq(this)">주차 가능한가요? <span>▼</span></div>
+                            <div class="w-faq-a">건물 내 무료 주차 가능합니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-footer">
+                    <div style="font-size:20px; font-family:'Ibarra Real Nova'; margin-bottom:20px;">${siteData.logo}</div>
+                    <p><i class="fas fa-map-marker-alt"></i> ${siteData.contact.address}</p>
+                    <p><i class="fas fa-phone-alt"></i> ${siteData.contact.phone}</p>
+                    <div style="margin-top:30px; opacity:0.5; font-size:11px;">© 2024 ${siteData.logo}. All Rights Reserved.</div>
+                </div>
+            `;
+            
+            root.innerHTML = html;
+        }
+
+        // ===========================================
+        // 3. 컨트롤러: 에디터 로직 (Controller)
+        // ===========================================
+        
+        // 초기화: 데이터 로드 및 렌더링
+        window.onload = function() {
+            loadDataToEditor(); // 데이터 -> 에디터 입력창
+            renderWebsite();    // 데이터 -> 웹사이트 화면
+        };
+
+        // 데이터 -> 에디터 입력창에 채워넣기
+        function loadDataToEditor() {
+            document.getElementById('e-logo').value = siteData.logo;
+            document.getElementById('e-hero-title').value = siteData.heroTitle.replace(/<br>/g, "\n"); // <br>을 줄바꿈으로 변환
+            document.getElementById('e-hero-sub').value = siteData.heroSub;
+            document.getElementById('e-hero-img').value = siteData.heroImg;
+
+            document.getElementById('e-prog1-name').value = siteData.programs[0].name;
+            document.getElementById('e-prog1-desc').value = siteData.programs[0].desc;
+            document.getElementById('e-prog1-price').value = siteData.programs[0].price;
+
+            document.getElementById('e-prog2-name').value = siteData.programs[1].name;
+            document.getElementById('e-prog2-desc').value = siteData.programs[1].desc;
+            document.getElementById('e-prog2-price').value = siteData.programs[1].price;
+
+            document.getElementById('e-address').value = siteData.contact.address;
+            document.getElementById('e-phone').value = siteData.contact.phone;
+        }
+
+        // 에디터 입력값 -> 데이터 저장 및 화면 갱신
+        function applyChanges() {
+            siteData.logo = document.getElementById('e-logo').value;
+            siteData.heroTitle = document.getElementById('e-hero-title').value.replace(/\n/g, "<br>"); // 줄바꿈을 <br>로 변환
+            siteData.heroSub = document.getElementById('e-hero-sub').value;
+            siteData.heroImg = document.getElementById('e-hero-img').value;
+
+            siteData.programs[0].name = document.getElementById('e-prog1-name').value;
+            siteData.programs[0].desc = document.getElementById('e-prog1-desc').value;
+            siteData.programs[0].price = document.getElementById('e-prog1-price').value;
+
+            siteData.programs[1].name = document.getElementById('e-prog2-name').value;
+            siteData.programs[1].desc = document.getElementById('e-prog2-desc').value;
+            siteData.programs[1].price = document.getElementById('e-prog2-price').value;
+
+            siteData.contact.address = document.getElementById('e-address').value;
+            siteData.contact.phone = document.getElementById('e-phone').value;
+
+            renderWebsite(); // 화면 갱신
+            showToast();     // 저장 메시지
+        }
+
+        // 저장 완료 메시지 애니메이션
+        function showToast() {
+            const toast = document.getElementById('toast-msg');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // (프리뷰용) FAQ 토글 기능
+        function toggleFaq(el) {
+            el.parentElement.classList.toggle('active');
+        }
+
+    </script>
+</body>
+</html>
