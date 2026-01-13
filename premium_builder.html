@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Website Builder</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. 전체 레이아웃 및 공통 스타일 (고급화)
+           ========================================= */
+        :root {
+            --bg-color: #f9f8f4; /* 따뜻한 크림 화이트 */
+            --text-main: #2c2c2c; /* 부드러운 블랙 */
+            --text-sub: #5f5f5f;
+            --accent-gold: #bfa376; /* 고급스러운 샴페인 골드 */
+            --accent-hover: #a68b5e;
+            --white: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #ececec;
+            margin: 0; height: 100vh;
+            display: flex; overflow: hidden;
+        }
+
+        /* 화면 분할 */
+        .builder-container {
+            display: flex; width: 100%; height: 100%;
+        }
+
+        /* =========================================
+           2. 왼쪽: 웹사이트 미리보기 (Template)
+           ========================================= */
+        .preview-area {
+            flex: 6; /* 60% 비율 */
+            background-color: #eef0f2;
+            padding: 40px;
+            display: flex; justify-content: center;
+            overflow-y: auto;
+        }
+
+        .website-frame {
+            width: 100%; max-width: 800px; /* 노션 스타일의 중앙 정렬 너비 */
+            background-color: var(--bg-color);
+            min-height: 1000px;
+            box-shadow: var(--shadow);
+            border-radius: 4px; /* 노션처럼 약간 각지게 */
+            padding: 60px 80px;
+            position: relative;
+        }
+
+        /* --- 십분의일 스타일 컴포넌트 (디자인 업그레이드) --- */
+        
+        /* 헤더 */
+        .site-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 60px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text-main); font-weight: bold; }
+        .nav-menu span { margin-left: 20px; font-size: 14px; color: var(--text-sub); cursor: pointer; }
+
+        /* 히어로 섹션 */
+        .hero-section { margin-bottom: 50px; }
+        .hero-title {
+            font-size: 42px; font-weight: 700; color: var(--text-main);
+            margin-bottom: 20px; letter-spacing: -0.5px; line-height: 1.3;
+        }
+        .hero-desc {
+            font-size: 17px; line-height: 1.7; color: var(--text-sub);
+        }
+
+        /* 콜아웃 박스 (강조 박스) */
+        .callout-box {
+            background-color: var(--white);
+            border-left: 4px solid var(--accent-gold);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 50px; display: flex; gap: 15px; align-items: start;
+        }
+        .callout-icon { font-size: 24px; }
+        .callout-content h4 { margin: 0 0 8px 0; font-size: 18px; color: var(--text-main); }
+        .callout-content p { margin: 0; font-size: 15px; color: var(--text-sub); line-height: 1.6; }
+
+        /* FAQ (아코디언) */
+        .faq-section h3 { font-size: 24px; margin-bottom: 20px; color: var(--text-main); border-bottom: 2px solid var(--accent-gold); display: inline-block; padding-bottom: 5px;}
+        
+        .accordion-item {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+        .accordion-header {
+            padding: 20px 0; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 17px; font-weight: 600; color: var(--text-main);
+            transition: color 0.3s;
+        }
+        .accordion-header:hover { color: var(--accent-gold); }
+        
+        .accordion-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
+            color: var(--text-sub); font-size: 15px; line-height: 1.6;
+        }
+        .accordion-body p { padding-bottom: 20px; margin: 0; }
+        
+        /* 활성화 클래스 */
+        .accordion-item.active .accordion-body { max-height: 200px; }
+        .accordion-item.active .accordion-header { color: var(--accent-gold); }
+
+
+        /* =========================================
+           3. 오른쪽: 에디터 패널 (Admin)
+           ========================================= */
+        .editor-area {
+            flex: 4; /* 40% 비율 */
+            background-color: var(--white);
+            border-left: 1px solid #ddd;
+            display: flex; flex-direction: column;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .editor-header {
+            padding: 25px; background: #333; color: white;
+            font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .editor-content {
+            padding: 30px; overflow-y: auto; flex: 1;
+        }
+
+        .input-group { margin-bottom: 25px; }
+        .input-label { display: block; font-size: 13px; font-weight: bold; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        input[type="text"], textarea {
+            width: 100%; padding: 12px 15px;
+            border: 1px solid #ddd; border-radius: 6px;
+            font-size: 14px; transition: 0.3s;
+            font-family: 'Pretendard'; background: #fdfdfd;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--accent-gold); outline: none; background: white;
+            box-shadow: 0 0 0 3px rgba(191, 163, 118, 0.2);
+        }
+        textarea { height: 80px; resize: vertical; }
+
+        .divider { height: 1px; background: #eee; margin: 30px 0; }
+        .section-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+        /* 저장 버튼 */
+        .save-bar {
+            padding: 20px; border-top: 1px solid #eee; background: white;
+        }
+        .btn-save {
+            width: 100%; padding: 15px;
+            background-color: var(--accent-gold); color: white;
+            border: none; border-radius: 8px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-save:hover { background-color: var(--accent-hover); box-shadow: 0 5px 15px rgba(191, 163, 118, 0.4); }
+
+        /* 토스트 메시지 */
+        .toast {
+            position: fixed; bottom: 30px; right: 450px; /* 에디터 왼쪽에 표시 */
+            background: #333; color: white; padding: 15px 25px;
+            border-radius: 50px; opacity: 0; transition: 0.5s;
+            pointer-events: none; transform: translateY(20px);
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <div class="builder-container">
+        
+        <div class="preview-area">
+            <div class="website-frame" id="website-root">
+                </div>
+        </div>
+
+        <div class="editor-area">
+            <div class="editor-header">
+                <span>WEBSITE EDITOR</span>
+                <span style="font-size: 12px; opacity: 0.7;">v1.0 Premium</span>
+            </div>
+            
+            <div class="editor-content">
+                <div class="section-title">📌 헤더 및 메인 타이틀</div>
+                <div class="input-group">
+                    <label class="input-label">로고 텍스트</label>
+                    <input type="text" id="edit-logo" value="Ten & One">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">메인 제목 (Hero Title)</label>
+                    <textarea id="edit-hero-title">당신의 가치를 담아내는<br>프리미엄 웹 템플릿</textarea>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">서브 설명 (Subtitle)</label>
+                    <textarea id="edit-hero-desc">복잡한 과정 없이 텍스트만 입력하세요. 십분의일의 감성을 담아 더 고급스럽고 우아한 웹사이트를 완성해 드립니다.</textarea>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-title">💡 강조 박스 (Callout)</div>
+                <div class="input-group">
+                    <label class="input-label">강조 제목</label>
+                    <input type="text" id="edit-callout-title" value="왜 프리미엄인가요?">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">강조 내용</label>
+                    <textarea id="edit-callout-desc">우리는 단순한 템플릿이 아닙니다. 당신의 브랜드가 가장 빛날 수 있는 최적의 레이아웃과 톤앤매너를 제공합니다.</textarea>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-title">❓ 자주 묻는 질문 (FAQ)</div>
+                
+                <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div class="input-group">
+                        <label class="input-label">질문 1</label>
+                        <input type="text" id="edit-faq1-q" value="웹사이트 제작에 대해 전혀 모르는데 괜찮나요?">
+                    </div>
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label class="input-label">답변 1</label>
+                        <textarea id="edit-faq1-a" style="height:60px;">네, 괜찮습니다. 복잡한 코딩 없이 텍스트와 이미지만 교체하면 전문가 수준의 웹사이트가 완성되도록 설계되었습니다.</textarea>
+                    </div>
+                </div>
+
+                <div style="background: #f8f8f8; padding: 15px; border-radius: 8px;">
+                    <div class="input-group">
+                        <label class="input-label">질문 2</label>
+                        <input type="text" id="edit-faq2-q" value="수정하면 바로 반영되나요?">
+                    </div>
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label class="input-label">답변 2</label>
+                        <textarea id="edit-faq2-a" style="height:60px;">네! 우측의 '수정 완료' 버튼을 누르는 순간 고객님의 웹사이트에 즉시 적용되어 방문자들이 확인할 수 있습니다.</textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="save-bar">
+                <button class="btn-save" onclick="applyChanges()">✨ 수정 완료 및 적용하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast-msg">✅ 웹사이트에 성공적으로 반영되었습니다.</div>
+
+    <script>
+        /* [데이터 상태 관리]
+           실제 서비스에서는 이 데이터가 DB에서 불러와집니다.
+        */
+        let siteData = {
+            logo: "Ten & One",
+            heroTitle: "당신의 가치를 담아내는<br>프리미엄 웹 템플릿",
+            heroDesc: "복잡한 과정 없이 텍스트만 입력하세요. 십분의일의 감성을 담아 더 고급스럽고 우아한 웹사이트를 완성해 드립니다.",
+            calloutTitle: "왜 프리미엄인가요?",
+            calloutDesc: "우리는 단순한 템플릿이 아닙니다. 당신의 브랜드가 가장 빛날 수 있는 최적의 레이아웃과 톤앤매너를 제공합니다.",
+            faq: [
+                { q: "웹사이트 제작에 대해 전혀 모르는데 괜찮나요?", a: "네, 괜찮습니다. 복잡한 코딩 없이 텍스트와 이미지만 교체하면 전문가 수준의 웹사이트가 완성되도록 설계되었습니다." },
+                { q: "수정하면 바로 반영되나요?", a: "네! 우측의 '수정 완료' 버튼을 누르는 순간 고객님의 웹사이트에 즉시 적용되어 방문자들이 확인할 수 있습니다." }
+            ]
+        };
+
+        // 1. 초기 렌더링 (페이지 로드 시)
+        window.onload = function() {
+            renderWebsite();
+            syncEditorValues(); // 에디터 인풋에도 초기값 넣어주기
+        };
+
+        // 2. 렌더링 함수 (데이터 -> HTML 변환)
+        function renderWebsite() {
+            const root = document.getElementById('website-root');
+            
+            // HTML 구조 조립 (One-tenth 레이아웃 + Premium Design)
+            let html = `
+                <header class="site-header">
+                    <div class="logo">${siteData.logo}</div>
+                    <nav class="nav-menu">
+                        <span>소개</span>
+                        <span>템플릿</span>
+                        <span>문의하기</span>
+                    </nav>
+                </header>
+
+                <section class="hero-section">
+                    <div class="hero-title">${siteData.heroTitle}</div>
+                    <div class="hero-desc">${siteData.heroDesc}</div>
+                </section>
+
+                <section class="callout-box">
+                    <div class="callout-icon">💡</div>
+                    <div class="callout-content">
+                        <h4>${siteData.calloutTitle}</h4>
+                        <p>${siteData.calloutDesc}</p>
+                    </div>
+                </section>
+
+                <section class="faq-section">
+                    <h3>FAQ</h3>
+                    <div class="accordion-list">
+            `;
+
+            // FAQ 리스트 반복 생성
+            siteData.faq.forEach((item, index) => {
+                html += `
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            ${item.q}
+                            <span style="font-size:12px">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>${item.a}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </section>
+                
+                <footer style="margin-top: 80px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999;">
+                    © 2024 ${siteData.logo}. All rights reserved.
+                </footer>
+            `;
+
+            root.innerHTML = html;
+        }
+
+        // 3. 에디터 -> 데이터 동기화 (저장 버튼 클릭 시 실행)
+        function applyChanges() {
+            // 입력창의 값을 가져와 siteData 업데이트
+            siteData.logo = document.getElementById('edit-logo').value;
+            siteData.heroTitle = document.getElementById('edit-hero-title').value.replace(/\n/g, "<br>"); // 줄바꿈 처리
+            siteData.heroDesc = document.getElementById('edit-hero-desc').value;
+            siteData.calloutTitle = document.getElementById('edit-callout-title').value;
+            siteData.calloutDesc = document.getElementById('edit-callout-desc').value;
+            
+            // FAQ 데이터 업데이트
+            siteData.faq[0].q = document.getElementById('edit-faq1-q').value;
+            siteData.faq[0].a = document.getElementById('edit-faq1-a').value;
+            siteData.faq[1].q = document.getElementById('edit-faq2-q').value;
+            siteData.faq[1].a = document.getElementById('edit-faq2-a').value;
+
+            // 다시 렌더링 (화면 갱신)
+            renderWebsite();
+
+            // 토스트 메시지 보여주기
+            const toast = document.getElementById('toast-msg');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // 4. 초기값 에디터에 세팅
+        function syncEditorValues() {
+            // (이미 HTML value에 하드코딩 되어있지만, 실제론 DB값으로 덮어써야 함)
+            // 여기서는 HTML value를 그대로 둡니다.
+        }
+
+        // 5. 아코디언 토글 기능 (미리보기 화면용)
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            // 다른 열려있는 것 닫기 (선택사항)
+            // document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+            
+            // 클릭한 것 토글
+            item.classList.toggle('active');
+        }
+
+    </script>
+</body>
+</html>
