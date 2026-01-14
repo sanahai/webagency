@@ -18,6 +18,7 @@
             --primary: #0055ff; --primary-dark: #003bb3;
             --dark: #0a1122; --text-main: #1f2937; --text-sub: #4b5563;
             --bg-gray: #f9fafb; --border: #e5e7eb;
+            --accent: #fbbf24; /* 강조색 (노랑) */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -26,7 +27,7 @@
             background-color: #fff; 
             line-height: 1.6;
             overflow-x: hidden;
-            word-break: keep-all; /* [수정 2] 단어 단위 줄바꿈 */
+            word-break: keep-all;
         }
         
         a { text-decoration: none; color: inherit; transition: 0.2s; }
@@ -34,7 +35,7 @@
         img { max-width: 100%; display: block; }
         
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .section { padding: 50px 0; } /* [기존 유지] 간격 50% 축소 상태 */
+        .section { padding: 50px 0; }
 
         h1, h2, h3 { font-weight: 800; letter-spacing: -0.5px; color: var(--dark); line-height: 1.3; }
         .sec-header { text-align: center; max-width: 700px; margin: 0 auto 40px; }
@@ -47,11 +48,13 @@
         .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
         .btn-outline { background: transparent; border: 2px solid #ddd; color: var(--dark); }
         .btn-outline:hover { border-color: var(--dark); background: var(--dark); color: white; }
-        .btn-white { 
-            background: white; color: var(--primary); padding: 18px 50px; font-size: 18px; font-weight: 800; 
-            border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: none;
+        
+        /* [수정 2] 가독성을 위한 노란색 버튼 (CTA용) */
+        .btn-cta { 
+            background: var(--accent); color: #111; padding: 18px 50px; font-size: 18px; font-weight: 800; 
+            border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: none;
         }
-        .btn-white:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .btn-cta:hover { background: #f59e0b; transform: translateY(-3px); }
 
         /* =========================================
            2. Header & Hero
@@ -67,41 +70,36 @@
         .hero-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
         
         .hero-text h1 { font-size: 54px; margin-bottom: 20px; }
-        .hero-text p { 
-            font-size: 18px; color: var(--text-sub); margin-bottom: 50px; line-height: 1.6; 
-            /* [수정 1] 하단 간격 띄움 */
-        } 
-        
+        .hero-text p { font-size: 18px; color: var(--text-sub); margin-bottom: 50px; line-height: 1.6; }
         .hero-badges { display: flex; gap: 15px; margin-bottom: 30px; }
         .badge { background: #eff6ff; color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
-
         .typing-cursor::after { content: '|'; animation: blink 1s step-start infinite; color: var(--primary); }
         @keyframes blink { 50% { opacity: 0; } }
-        
         .hero-visual img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* =========================================
-           3. Features (ZigZag) - [수정 2, 3]
+           3. Features & [수정 1] Separator Icon
            ========================================= */
         .feature-block { padding: 60px 0; }
         .bg-gray { background-color: var(--bg-gray); }
         .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-        
-        /* [수정 2] 텍스트 간격/줄바꿈 일치 */
         .fb-text h2 { font-size: 32px; margin-bottom: 25px; }
         .fb-text p { font-size: 17px; color: var(--text-sub); margin-bottom: 30px; line-height: 1.7; }
-        .fb-list li { 
-            display: flex; align-items: center; gap: 12px; margin-bottom: 15px; 
-            font-size: 16px; font-weight: 600; color: var(--dark); line-height: 1.5;
-        }
+        .fb-list li { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 16px; font-weight: 600; color: var(--dark); line-height: 1.5; }
         .fb-list i { color: var(--primary); font-size: 18px; }
-        
-        /* [수정 3] 이미지 깨짐 수정 */
         .fb-image img { border-radius: 16px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); width: 100%; object-fit: cover; }
 
+        /* [수정 1] 섹션 간 경계 아이콘 스트립 */
+        .separator-strip {
+            display: flex; justify-content: center; gap: 60px;
+            padding: 40px 0; background: #fff;
+            color: #cbd5e1; /* 연한 회색 */
+            font-size: 28px;
+        }
+
         /* =========================================
-           4. Portfolio (15 Grid)
+           4. Portfolio
            ========================================= */
         .case-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; }
         .case-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid var(--border); }
@@ -114,23 +112,18 @@
         .case-title { font-size: 13px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* =========================================
-           5. Reviews (Infinite Scroll) - [수정 4]
+           5. Reviews
            ========================================= */
         .review-section { padding: 60px 0; overflow: hidden; background: white; border-top: 1px solid var(--border); }
         .review-wrapper { position: relative; width: 100%; }
         .review-wrapper::before, .review-wrapper::after { content: ""; position: absolute; top: 0; width: 150px; height: 100%; z-index: 2; pointer-events: none; }
         .review-wrapper::before { left: 0; background: linear-gradient(to right, white, transparent); }
         .review-wrapper::after { right: 0; background: linear-gradient(to left, white, transparent); }
-
         .review-track { display: flex; width: max-content; gap: 20px; margin-bottom: 20px; }
-        
-        /* [수정 4] 속도 가속 (25s) */
         .scroll-left { animation: scrollLeft 25s linear infinite; }
         .scroll-right { animation: scrollRight 25s linear infinite; }
-        
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        
         .r-card { width: 320px; background: #f9fafb; padding: 25px; border-radius: 12px; border: 1px solid var(--border); flex-shrink: 0; }
         .r-stars { color: #fbbf24; margin-bottom: 10px; font-size: 14px; }
         .r-text { font-size: 14px; font-weight: 500; margin-bottom: 15px; line-height: 1.5; color: var(--text-main); height: 65px; overflow: hidden; }
@@ -138,37 +131,24 @@
         .r-avatar { width: 30px; height: 30px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-sub); }
 
         /* =========================================
-           6. Templates & [수정 5] Custom Box
+           6. Templates
            ========================================= */
         .tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        .tpl-card { 
-            background: white; border: 1px solid var(--border); border-radius: 8px; 
-            overflow: hidden; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column;
-            height: 100%;
-        }
+        .tpl-card { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
         .tpl-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         .tpl-thumb { height: 220px; background: #eee; overflow: hidden; }
         .tpl-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .tpl-card:hover .tpl-thumb img { transform: scale(1.05); }
         .tpl-body { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .tpl-title { font-size: 18px; font-weight: 800; margin-bottom: 5px; }
-        
-        /* [수정 5] 박스 디자인 변경 (동일성 유지하되 차분하게) */
-        .tpl-card.custom { 
-            background: #fff; /* 흰색 배경 유지 */
-            border: 2px dashed #9ca3af; /* 점선 테두리로 '커스텀' 느낌 */
-            color: var(--text-main);
-            text-align: center; 
-            justify-content: center; align-items: center; 
-            min-height: 300px;
-        }
+        .tpl-card.custom { background: #fff; border: 2px dashed #9ca3af; color: var(--text-main); text-align: center; justify-content: center; align-items: center; min-height: 300px; }
         .tpl-card.custom:hover { border-color: var(--primary); border-style: solid; background: #f0f9ff; }
         .tpl-card.custom i { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
         .tpl-card.custom h3 { margin-bottom: 10px; font-size: 20px; }
         .tpl-card.custom p { color: var(--text-sub); font-size: 14px; }
 
         /* =========================================
-           7. [수정 6] Comparison Section (Restored)
+           7. Comparison & FAQ
            ========================================= */
         .comp-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 12px; overflow: hidden; }
         .comp-table th, .comp-table td { padding: 20px; text-align: center; border-bottom: 1px solid #f0f0f0; }
@@ -176,9 +156,6 @@
         .comp-table th.brand-col { background: #eff6ff; color: var(--primary); font-size: 18px; }
         .comp-table td:first-child { text-align: left; font-weight: 700; color: var(--dark); padding-left: 30px; }
 
-        /* =========================================
-           8. FAQ
-           ========================================= */
         .faq-list { max-width: 800px; margin: 0 auto 30px; }
         .faq-item { border-bottom: 1px solid #eee; }
         .faq-q { padding: 20px 0; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -188,7 +165,7 @@
         .faq-item.active .faq-q i { transform: rotate(180deg); }
 
         /* =========================================
-           9. [수정 7] CTA (Text Visibility Fix)
+           8. CTA (Box & Text Visible Fix)
            ========================================= */
         .cta-box { 
             background: linear-gradient(135deg, #0055ff 0%, #002299 100%); 
@@ -197,22 +174,19 @@
             background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
             box-shadow: 0 20px 50px rgba(0, 85, 255, 0.3);
         }
-        /* 텍스트 색상 강제 지정 */
         .cta-box h2 { color: #ffffff !important; font-size: 42px; margin-bottom: 20px; }
         .cta-box p { color: #ffffff !important; font-size: 18px; opacity: 0.9; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
         /* =========================================
-           10. [수정 8] Footer (Right Align)
+           9. Footer (Right Align)
            ========================================= */
         footer { background: #0a1122; color: #94a3b8; padding: 60px 0; font-size: 13px; }
         .footer-grid { display: flex; justify-content: space-between; align-items: flex-start; }
         .footer-logo { color: white; font-size: 20px; font-weight: 800; margin-bottom: 15px; display: inline-block; }
         .footer-info p { margin-bottom: 8px; }
-        
         .footer-right { text-align: right; }
         .footer-right p { margin-bottom: 8px; }
         .footer-right strong { color: white; font-size: 14px; }
-
         .footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid #1f2937; display: flex; justify-content: space-between; }
 
         @media (max-width: 1024px) { .case-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -293,6 +267,13 @@
         </div>
     </section>
 
+    <div class="separator-strip">
+        <i class="fas fa-code"></i>
+        <i class="fas fa-server"></i>
+        <i class="fas fa-mobile-alt"></i>
+        <i class="fas fa-rocket"></i>
+    </div>
+
     <section class="feature-block bg-gray">
         <div class="container fb-grid">
              <div class="fb-image" data-aos="fade-right" style="order: 2;">
@@ -340,31 +321,29 @@
         <div class="container"><div class="sec-header"><h2 class="sec-title">Customer Reviews</h2></div></div>
         <div class="review-wrapper">
             <div class="review-track scroll-left">
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"10만원에 이 퀄리티라니 믿기지 않습니다."</div><div class="r-user"><div class="r-avatar">K</div>김민수 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"개발자 없이 수정 가능하다는 게 가장 큰 장점입니다."</div><div class="r-user"><div class="r-avatar">L</div>이영희 원장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"속도가 정말 빠릅니다. 하루만에 오픈했어요."</div><div class="r-user"><div class="r-avatar">P</div>박진수 사장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"디자인이 너무 세련되었습니다."</div><div class="r-user"><div class="r-avatar">H</div>한지민 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"가성비가 정말 최고입니다."</div><div class="r-user"><div class="r-avatar">S</div>서동현</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"10만원에 이 퀄리티라니 믿기지 않습니다."</div><div class="r-user"><div class="r-avatar">K</div>김민수 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"개발자 없이 수정 가능하다는 게 가장 큰 장점입니다."</div><div class="r-user"><div class="r-avatar">L</div>이영희 원장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"속도가 정말 빠릅니다. 하루만에 오픈했어요."</div><div class="r-user"><div class="r-avatar">P</div>박진수 사장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"디자인이 너무 세련되었습니다."</div><div class="r-user"><div class="r-avatar">H</div>한지민 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"가성비가 정말 최고입니다."</div><div class="r-user"><div class="r-avatar">S</div>서동현</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"10만원에 이 퀄리티라니 믿기지 않습니다."</p><div class="r-user"><div class="r-avatar">K</div>김민수 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"개발자 없이 수정 가능하다는 게 가장 큰 장점입니다."</p><div class="r-user"><div class="r-avatar">L</div>이영희 원장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"속도가 정말 빠릅니다. 하루만에 오픈했어요."</p><div class="r-user"><div class="r-avatar">P</div>박진수 사장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"디자인이 너무 세련되었습니다."</p><div class="r-user"><div class="r-avatar">H</div>한지민 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"가성비가 정말 최고입니다."</p><div class="r-user"><div class="r-avatar">S</div>서동현</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"10만원에 이 퀄리티라니 믿기지 않습니다."</p><div class="r-user"><div class="r-avatar">K</div>김민수 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"개발자 없이 수정 가능하다는 게 가장 큰 장점입니다."</p><div class="r-user"><div class="r-avatar">L</div>이영희 원장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"속도가 정말 빠릅니다. 하루만에 오픈했어요."</p><div class="r-user"><div class="r-avatar">P</div>박진수 사장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"디자인이 너무 세련되었습니다."</p><div class="r-user"><div class="r-avatar">H</div>한지민 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"가성비가 정말 최고입니다."</p><div class="r-user"><div class="r-avatar">S</div>서동현</div></div>
             </div>
-            
             <div style="height:20px;"></div>
-            
             <div class="review-track scroll-right">
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"커스텀 컬러 적용해주셔서 브랜드 톤앤매너랑 딱 맞습니다."</div><div class="r-user"><div class="r-avatar">Y</div>유재석 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"관리자 페이지가 직관적이라 직원들도 금방 배우네요."</div><div class="r-user"><div class="r-avatar">J</div>정준하 원장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"기존 에이전시 비용의 10%도 안 되는 가격입니다."</div><div class="r-user"><div class="r-avatar">N</div>노홍철 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"친구 추천으로 했는데 저도 추천하고 다닙니다."</div><div class="r-user"><div class="r-avatar">H</div>하동훈 사장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"상담이 매우 친절하고 빠릅니다."</div><div class="r-user"><div class="r-avatar">G</div>길성준</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"커스텀 컬러 적용해주셔서 브랜드 톤앤매너랑 딱 맞습니다."</div><div class="r-user"><div class="r-avatar">Y</div>유재석 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"관리자 페이지가 직관적이라 직원들도 금방 배우네요."</div><div class="r-user"><div class="r-avatar">J</div>정준하 원장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"기존 에이전시 비용의 10%도 안 되는 가격입니다."</div><div class="r-user"><div class="r-avatar">N</div>노홍철 대표</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"친구 추천으로 했는데 저도 추천하고 다닙니다."</div><div class="r-user"><div class="r-avatar">H</div>하동훈 사장</div></div>
-                <div class="r-card"><div class="r-stars">★★★★★</div><div class="r-text">"상담이 매우 친절하고 빠릅니다."</div><div class="r-user"><div class="r-avatar">G</div>길성준</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"커스텀 컬러 적용해주셔서 브랜드 톤앤매너랑 딱 맞습니다."</p><div class="r-user"><div class="r-avatar">Y</div>유재석 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"관리자 페이지가 직관적이라 직원들도 금방 배우네요."</p><div class="r-user"><div class="r-avatar">J</div>정준하 원장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"기존 에이전시 비용의 10%도 안 되는 가격입니다."</p><div class="r-user"><div class="r-avatar">N</div>노홍철 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"친구 추천으로 했는데 저도 추천하고 다닙니다."</p><div class="r-user"><div class="r-avatar">H</div>하동훈 사장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"상담이 매우 친절하고 빠릅니다."</p><div class="r-user"><div class="r-avatar">G</div>길성준</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"커스텀 컬러 적용해주셔서 브랜드 톤앤매너랑 딱 맞습니다."</p><div class="r-user"><div class="r-avatar">Y</div>유재석 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"관리자 페이지가 직관적이라 직원들도 금방 배우네요."</p><div class="r-user"><div class="r-avatar">J</div>정준하 원장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"기존 에이전시 비용의 10%도 안 되는 가격입니다."</p><div class="r-user"><div class="r-avatar">N</div>노홍철 대표</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"친구 추천으로 했는데 저도 추천하고 다닙니다."</p><div class="r-user"><div class="r-avatar">H</div>하동훈 사장</div></div>
+                <div class="r-card"><div class="r-stars">★★★★★</div><p class="r-text">"상담이 매우 친절하고 빠릅니다."</p><div class="r-user"><div class="r-avatar">G</div>길성준</div></div>
             </div>
         </div>
     </section>
@@ -378,7 +357,6 @@
                 <div class="tpl-card"><div class="tpl-thumb"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800"></div><div class="tpl-body"><div class="tpl-title">Restaurant</div><p>식당 / 카페</p></div></div>
                 <div class="tpl-card"><div class="tpl-thumb"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800"></div><div class="tpl-body"><div class="tpl-title">Portfolio</div><p>개인 / 프리랜서</p></div></div>
                 <div class="tpl-card"><div class="tpl-thumb"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800"></div><div class="tpl-body"><div class="tpl-title">Medical</div><p>병원 / 한의원</p></div></div>
-                
                 <div class="tpl-card custom">
                     <i class="fas fa-palette"></i>
                     <h3>Custom Color</h3>
@@ -436,7 +414,7 @@
         <div class="cta-box" data-aos="fade-up">
             <h2>Ready to grow your business?</h2>
             <p>더 이상 망설이지 마세요. 커피 20잔 값이면 평생 소유할 수 있는 프리미엄 웹사이트가 완성됩니다.</p>
-            <button class="btn btn-white">10만원으로 시작하기</button>
+            <button class="btn-cta">10만원으로 시작하기</button>
         </div>
     </section>
 
