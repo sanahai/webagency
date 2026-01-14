@@ -18,7 +18,7 @@
             --primary: #0055ff; --primary-dark: #003bb3;
             --dark: #0a1122; --text-main: #1f2937; --text-sub: #4b5563;
             --bg-gray: #f9fafb; --border: #e5e7eb;
-            --accent: #fbbf24; /* 강조색 (노랑) */
+            --accent: #fbbf24;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -49,7 +49,6 @@
         .btn-outline { background: transparent; border: 2px solid #ddd; color: var(--dark); }
         .btn-outline:hover { border-color: var(--dark); background: var(--dark); color: white; }
         
-        /* [수정 2] 가독성을 위한 노란색 버튼 (CTA용) */
         .btn-cta { 
             background: var(--accent); color: #111; padding: 18px 50px; font-size: 18px; font-weight: 800; 
             border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: none;
@@ -79,7 +78,7 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* =========================================
-           3. Features & [수정 1] Separator Icon
+           3. Features & Separator
            ========================================= */
         .feature-block { padding: 60px 0; }
         .bg-gray { background-color: var(--bg-gray); }
@@ -90,13 +89,7 @@
         .fb-list i { color: var(--primary); font-size: 18px; }
         .fb-image img { border-radius: 16px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); width: 100%; object-fit: cover; }
 
-        /* [수정 1] 섹션 간 경계 아이콘 스트립 */
-        .separator-strip {
-            display: flex; justify-content: center; gap: 60px;
-            padding: 40px 0; background: #fff;
-            color: #cbd5e1; /* 연한 회색 */
-            font-size: 28px;
-        }
+        .separator-strip { display: flex; justify-content: center; gap: 60px; padding: 40px 0; background: #fff; color: #cbd5e1; font-size: 28px; }
 
         /* =========================================
            4. Portfolio
@@ -165,29 +158,39 @@
         .faq-item.active .faq-q i { transform: rotate(180deg); }
 
         /* =========================================
-           8. CTA (Box & Text Visible Fix)
+           8. [수정 1] CTA (New Color)
            ========================================= */
         .cta-box { 
-            background: linear-gradient(135deg, #0055ff 0%, #002299 100%); 
+            /* 진한 네이비/블루 그라데이션으로 변경하여 텍스트 가독성 확보 */
+            background: linear-gradient(135deg, #0a1122 0%, #002299 100%); 
             padding: 80px 40px; 
             text-align: center; border-radius: 16px; 
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-            box-shadow: 0 20px 50px rgba(0, 85, 255, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
         .cta-box h2 { color: #ffffff !important; font-size: 42px; margin-bottom: 20px; }
-        .cta-box p { color: #ffffff !important; font-size: 18px; opacity: 0.9; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-box p { color: #e0e0e0 !important; font-size: 18px; opacity: 0.9; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
         /* =========================================
-           9. Footer (Right Align)
+           9. [수정 2] Footer (Compact & Line Removed)
            ========================================= */
-        footer { background: #0a1122; color: #94a3b8; padding: 60px 0; font-size: 13px; }
+        footer { 
+            background: #0a1122; color: #94a3b8; 
+            padding: 35px 0; /* 간격 40% 축소 (60px -> 35px) */
+            font-size: 13px; 
+        }
         .footer-grid { display: flex; justify-content: space-between; align-items: flex-start; }
         .footer-logo { color: white; font-size: 20px; font-weight: 800; margin-bottom: 15px; display: inline-block; }
         .footer-info p { margin-bottom: 8px; }
         .footer-right { text-align: right; }
         .footer-right p { margin-bottom: 8px; }
         .footer-right strong { color: white; font-size: 14px; }
-        .footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid #1f2937; display: flex; justify-content: space-between; }
+        
+        .footer-bottom { 
+            margin-top: 20px; /* 간격 축소 */
+            padding-top: 0; /* 패딩 제거 */
+            border-top: none; /* 라인 삭제 */
+            display: flex; justify-content: space-between; 
+        }
 
         @media (max-width: 1024px) { .case-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 768px) { 
@@ -300,13 +303,11 @@
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=400"></div><div class="case-info"><span class="case-cat">CAFE</span><div class="case-title">카페 멜로우</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400"></div><div class="case-info"><span class="case-cat">PORTFOLIO</span><div class="case-title">디자이너 김민수</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=400"></div><div class="case-info"><span class="case-cat">MEDICAL</span><div class="case-title">바른 정형외과</div></div></div>
-                
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?q=80&w=400"></div><div class="case-info"><span class="case-cat">LAW</span><div class="case-title">법무법인 태산</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=400"></div><div class="case-info"><span class="case-cat">SHOP</span><div class="case-title">어반 플라워</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=400"></div><div class="case-info"><span class="case-cat">GYM</span><div class="case-title">핏바디 짐</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400"></div><div class="case-info"><span class="case-cat">INTERIOR</span><div class="case-title">공간 디자인</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=400"></div><div class="case-info"><span class="case-cat">FOOD</span><div class="case-title">청담 다이닝</div></div></div>
-
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?q=80&w=400"></div><div class="case-info"><span class="case-cat">STARTUP</span><div class="case-title">데이터 랩</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400"></div><div class="case-info"><span class="case-cat">CONSULT</span><div class="case-title">비전 파트너스</div></div></div>
                 <div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=400"></div><div class="case-info"><span class="case-cat">FASHION</span><div class="case-title">모던 룩</div></div></div>
