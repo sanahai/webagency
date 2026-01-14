@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100K WEB | 거품 없는 웹사이트 제작</title>
+    
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. Design System (Brand Identity)
+           ========================================= */
+        :root {
+            --primary: #3b82f6; /* 신뢰감 있는 블루 (커스텀 가능) */
+            --primary-dark: #1d4ed8;
+            --text-main: #111827;
+            --text-sub: #4b5563;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --max-width: 1000px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Pretendard', sans-serif; color: var(--text-main); line-height: 1.6; word-break: keep-all; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* 공통 레이아웃 */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+        .section { padding: 50px 0; }
+        .bg-light { background-color: var(--bg-light); }
+        
+        .sec-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 20px; line-height: 1.3; }
+        .sec-desc { font-size: 18px; color: var(--text-sub); text-align: center; margin-bottom: 60px; }
+        .highlight { color: var(--primary); }
+
+        /* =========================================
+           2. Header & Hero
+           ========================================= */
+        header { position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--border); }
+        .nav-wrap { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px; color: var(--text-main); }
+        .logo span { color: var(--primary); }
+        .nav-menu { display: flex; gap: 30px; font-weight: 600; font-size: 15px; }
+        
+        .hero { padding-top: 180px; padding-bottom: 120px; text-align: center; background: radial-gradient(circle at 50% 50%, #eff6ff 0%, #fff 70%); }
+        .hero-badge { display: inline-block; background: #dbeafe; color: var(--primary-dark); padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 14px; margin-bottom: 20px; }
+        .hero h1 { font-size: 56px; font-weight: 900; margin-bottom: 25px; line-height: 1.2; letter-spacing: -1px; }
+        .hero p { font-size: 20px; color: var(--text-sub); margin-bottom: 40px; }
+        .cta-btn { display: inline-block; background: var(--primary); color: white; padding: 18px 40px; border-radius: 10px; font-size: 18px; font-weight: 700; transition: 0.3s; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+        .cta-btn:hover { background: var(--primary-dark); transform: translateY(-3px); }
+
+        /* =========================================
+           3. Features (Why Us?)
+           ========================================= */
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .feature-card { padding: 40px; border-radius: 20px; background: white; border: 1px solid var(--border); transition: 0.3s; }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--primary); }
+        .f-icon { width: 60px; height: 60px; background: #eff6ff; color: var(--primary); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 25px; }
+        .f-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; }
+        .f-text { color: var(--text-sub); font-size: 16px; line-height: 1.6; }
+
+        /* =========================================
+           4. Builder Preview (핵심 차별화)
+           ========================================= */
+        .builder-demo { background: #111827; color: white; border-radius: 20px; padding: 60px; position: relative; overflow: hidden; }
+        .demo-content { position: relative; z-index: 2; max-width: 600px; }
+        .demo-img { position: absolute; right: -50px; top: 50px; width: 600px; border-radius: 10px; box-shadow: -20px 20px 50px rgba(0,0,0,0.5); border: 5px solid #333; }
+
+        /* =========================================
+           5. Templates
+           ========================================= */
+        .template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .tpl-card { border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: white; cursor: pointer; transition: 0.3s; }
+        .tpl-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .tpl-img { height: 250px; background-color: #eee; position: relative; overflow: hidden; }
+        .tpl-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .tpl-card:hover .tpl-img img { transform: scale(1.05); }
+        .tpl-info { padding: 20px; }
+        .tpl-name { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
+        .tpl-cat { font-size: 13px; color: var(--primary); font-weight: 600; text-transform: uppercase; }
+
+        /* =========================================
+           6. Pricing & Process
+           ========================================= */
+        .price-box { background: white; border: 2px solid var(--primary); border-radius: 20px; padding: 60px; text-align: center; max-width: 600px; margin: 0 auto; box-shadow: 0 20px 50px rgba(59, 130, 246, 0.1); }
+        .price-tag { font-size: 60px; font-weight: 900; color: var(--text-main); margin: 20px 0; }
+        .price-tag span { font-size: 20px; color: var(--text-sub); font-weight: 600; }
+        .check-list { text-align: left; margin: 40px auto; max-width: 350px; }
+        .check-list li { margin-bottom: 15px; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+        .check-list i { color: var(--primary); }
+
+        /* =========================================
+           7. FAQ (Accordion)
+           ========================================= */
+        .faq-item { border-bottom: 1px solid var(--border); }
+        .faq-q { padding: 25px 0; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; }
+        .faq-a { padding-bottom: 25px; color: var(--text-sub); display: none; line-height: 1.7; }
+        .faq-item.active .faq-a { display: block; }
+        .faq-item.active .faq-q { color: var(--primary); }
+
+        /* Footer */
+        footer { background: #111827; color: #9ca3af; padding: 60px 0; font-size: 14px; }
+        .footer-info div { margin-bottom: 10px; }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .feature-grid, .template-grid { grid-template-columns: 1fr; }
+            .demo-img { display: none; }
+            .nav-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrap">
+            <div class="logo">100K <span>WEB</span></div>
+            <ul class="nav-menu">
+                <li><a href="#feature">서비스 특징</a></li>
+                <li><a href="#template">템플릿 보기</a></li>
+                <li><a href="#price">가격 안내</a></li>
+                <li><a href="#faq">자주 묻는 질문</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <span class="hero-badge">🚀 선착순 오픈 이벤트 진행 중</span>
+            <h1>홈페이지 제작,<br><span class="highlight">10만 원</span>이면 충분합니다.</h1>
+            <p>서버비 평생 무료. 도메인 평생 무료.<br>복잡한 관리는 빼고, 꼭 필요한 기능만 담았습니다.</p>
+            <a href="#template" class="cta-btn">내게 맞는 템플릿 찾기</a>
+            <div style="margin-top: 20px; font-size: 14px; color: #6b7280;">* 추가 비용 0원, 24시간 내 셋팅 완료</div>
+        </div>
+    </section>
+
+    <section id="feature" class="section bg-light">
+        <div class="container">
+            <div class="sec-title">왜 100K WEB 인가요?</div>
+            <div class="sec-desc">비싼 제작비, 매달 나가는 관리비, 어려운 수정...<br>기존 홈페이지 제작의 문제점을 해결했습니다.</div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="f-icon"><i class="fas fa-coins"></i></div>
+                    <div class="f-title">압도적인 가성비</div>
+                    <div class="f-text">타사 대비 1/3 가격인 10만 원으로 제작 가능합니다. 매달 나가는 서버비, 유지보수 비용이 평생 0원입니다.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon"><i class="fas fa-magic"></i></div>
+                    <div class="f-title">자체 수정 빌더 제공</div>
+                    <div class="f-text">"텍스트 수정해주세요" 연락할 필요 없습니다. 저희가 제공하는 전용 수정 도구로 블로그처럼 쉽게 직접 수정하세요.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="f-title">하루 만에 완성</div>
+                    <div class="f-text">템플릿 기반으로 제작되어, 자료만 주시면 영업일 기준 24시간 안에 셋팅을 완료해 드립니다.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="builder-demo">
+                <div class="demo-content">
+                    <h2 style="font-size:32px; margin-bottom:20px;">어려운 워드프레스 대신,<br>직관적인 전용 에디터</h2>
+                    <p style="color:#d1d5db; margin-bottom:30px; font-size:18px;">
+                        우리는 고객님을 개발자로 만들 생각이 없습니다.<br>
+                        오직 비즈니스에만 집중하세요. 내용 수정은 메모장처럼 쉽습니다.
+                    </p>
+                    <div style="display:flex; gap:10px;">
+                        <span style="background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:14px;">✅ 실시간 미리보기</span>
+                        <span style="background:rgba(255,255,255,0.1); padding:5px 15px; border-radius:20px; font-size:14px;">✅ 이미지 클릭 업로드</span>
+                    </div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop" class="demo-img" alt="Builder Demo">
+            </div>
+        </div>
+    </section>
+
+    <section id="template" class="section bg-light">
+        <div class="container">
+            <div class="sec-title">검증된 5가지 프리미엄 템플릿</div>
+            <div class="sec-desc">업종에 딱 맞는 레이아웃을 선택하세요.<br>메인 컬러는 브랜드에 맞춰 변경해 드립니다.</div>
+
+            <div class="template-grid">
+                <div class="tpl-card" onclick="alert('뷰티샵 데모 페이지로 이동합니다 (준비중)')">
+                    <div class="tpl-img">
+                        <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=800&auto=format&fit=crop" alt="Beauty">
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-cat">BEST CHOICE</div>
+                        <div class="tpl-name">뷰티/에스테틱/네일</div>
+                        <p style="font-size:14px; color:#666;">고급스러운 이미지 중심 레이아웃, 시술 가격표 포함</p>
+                    </div>
+                </div>
+
+                <div class="tpl-card">
+                    <div class="tpl-img">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop" alt="Corporate">
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-cat">BUSINESS</div>
+                        <div class="tpl-name">기업/스타트업/법무</div>
+                        <p style="font-size:14px; color:#666;">신뢰감을 주는 블루톤, 연혁 및 팀 소개 섹션</p>
+                    </div>
+                </div>
+
+                <div class="tpl-card">
+                    <div class="tpl-img">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop" alt="Restaurant">
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-cat">STORE</div>
+                        <div class="tpl-name">식당/카페/요식업</div>
+                        <p style="font-size:14px; color:#666;">메뉴판 기능, 오시는 길 지도 강조형</p>
+                    </div>
+                </div>
+
+                <div class="tpl-card">
+                    <div class="tpl-img">
+                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop" alt="Portfolio">
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-cat">PORTFOLIO</div>
+                        <div class="tpl-name">포트폴리오/프리랜서</div>
+                        <p style="font-size:14px; color:#666;">작업물 갤러리 중심, 심플한 프로필</p>
+                    </div>
+                </div>
+
+                <div class="tpl-card">
+                    <div class="tpl-img">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800&auto=format&fit=crop" alt="Medical">
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-cat">MEDICAL</div>
+                        <div class="tpl-name">병원/한의원/건강</div>
+                        <p style="font-size:14px; color:#666;">진료 시간표, 의료진 소개, 깔끔한 정보 전달</p>
+                    </div>
+                </div>
+                
+                <div class="tpl-card" style="background:#f3f4f6; display:flex; align-items:center; justify-content:center; text-align:center;">
+                    <div style="padding:40px;">
+                        <i class="fas fa-paint-brush" style="font-size:40px; color:#ccc; margin-bottom:15px;"></i>
+                        <h3 style="font-size:18px;">원하는 컬러가 있나요?</h3>
+                        <p style="font-size:14px; color:#666; margin-top:10px;">브랜드 고유의 컬러를 말씀해주시면<br>메인 색상을 변경해 드립니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="price" class="section">
+        <div class="container">
+            <div class="sec-title">복잡한 옵션 없이 하나로 끝.</div>
+            
+            <div class="price-box">
+                <div style="font-size:18px; font-weight:bold; color:var(--primary); text-transform:uppercase; letter-spacing:1px;">All-in-One Package</div>
+                <div class="price-tag">100,000<span>원</span></div>
+                <p style="color:#666;">(VAT 별도 / 평생 1회 결제)</p>
+                
+                <ul class="check-list">
+                    <li><i class="fas fa-check-circle"></i> 5가지 프리미엄 템플릿 중 택 1</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>평생 무료</strong> 호스팅 제공</li>
+                    <li><i class="fas fa-check-circle"></i> 기본 도메인 주소 제공 (무료)</li>
+                    <li><i class="fas fa-check-circle"></i> 자체 수정 빌더(관리자) 제공</li>
+                    <li><i class="fas fa-check-circle"></i> 모바일/태블릿 반응형 지원</li>
+                    <li><i class="fas fa-check-circle"></i> 브랜드 컬러 커스텀 셋팅</li>
+                </ul>
+
+                <a href="#" class="cta-btn" style="width:100%;">지금 신청하고 혜택받기</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section bg-light">
+        <div class="container" style="max-width:800px;">
+            <div class="sec-title">자주 묻는 질문</div>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-q" onclick="this.parentElement.classList.toggle('active')">
+                        정말 매달 내는 비용이 0원인가요?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-a">
+                        네, 맞습니다. 서버 비용이나 유지보수 비용을 따로 받지 않습니다. 저희는 Github/Netlify 등의 안정적인 글로벌 정적 호스팅 서비스를 활용하여 평생 무료 서버 환경을 구축해 드립니다.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="this.parentElement.classList.toggle('active')">
+                        도메인(인터넷 주소)은 어떻게 되나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-a">
+                        기본적으로 '브랜드명.netlify.app' 형태의 주소를 평생 무료로 제공해 드립니다. 만약 'naver.com' 같은 개인 도메인을 연결하고 싶으시다면, 도메인 구입 비용(연 1~2만원, 타사 결제)만 내시면 연결해 드립니다.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="this.parentElement.classList.toggle('active')">
+                        나중에 내용을 수정할 수 있나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-a">
+                        물론입니다. 저희가 자체 개발한 '웹 빌더' 링크를 드립니다. 로그인하셔서 텍스트와 이미지를 직접 클릭하여 언제든 무료로 수정하실 수 있습니다.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="this.parentElement.classList.toggle('active')">
+                        제작 기간은 얼마나 걸리나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-a">
+                        신청서를 작성하시고 결제가 완료되면, 자료(사진, 문구)를 전달받은 시점으로부터 영업일 기준 24시간 이내에 셋팅을 완료해 드립니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="font-size:20px; font-weight:900; color:white; margin-bottom:20px;">100K WEB</div>
+            <div class="footer-info">
+                <div>상호명 : 100K WEB | 대표 : 홍길동</div>
+                <div>사업자등록번호 : 123-45-67890</div>
+                <div>주소 : 서울특별시 강남구 테헤란로 123</div>
+                <div>이메일 : contact@100kweb.com | 고객센터 : 02-1234-5678</div>
+            </div>
+            <div style="margin-top:30px; border-top:1px solid #374151; padding-top:20px;">
+                © 2026 100K WEB. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
