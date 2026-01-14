@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder - Corporate Template</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           1. 빌더 UI (공통)
+           ========================================= */
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; display: flex; height: 100vh; overflow: hidden; background: #1a1a1a; }
+        .preview-area { flex: 1; background-color: #f3f4f6; display: flex; justify-content: center; position: relative; }
+        .website-frame { width: 100%; height: 100%; background: white; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+        .editor-area { width: 400px; flex-shrink: 0; background-color: #2c2c2c; color: #eee; display: flex; flex-direction: column; border-left: 1px solid #444; z-index: 100; }
+        .editor-header { padding: 15px; background: #1f1f1f; border-bottom: 1px solid #444; font-weight: bold; color: #60a5fa; display: flex; justify-content: space-between; }
+        .editor-scroll { flex: 1; overflow-y: auto; padding: 20px; }
+        .save-bar { padding: 15px; background: #1f1f1f; border-top: 1px solid #444; }
+        .btn-save { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-save:hover { background: #1d4ed8; }
+        
+        /* 에디터 컴포넌트 */
+        .group { background: #383838; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .group-title { font-size: 13px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; color: white; }
+        .input-box { margin-bottom: 10px; }
+        .lbl { font-size: 11px; color: #aaa; margin-bottom: 4px; display: block; }
+        input[type="text"], textarea { width: 100%; background: #444; border: 1px solid #555; color: white; padding: 8px; border-radius: 4px; font-size: 12px; font-family: 'Pretendard'; }
+        textarea { resize: vertical; min-height: 50px; }
+        
+        .list-item { background: #4a4a4a; padding: 10px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #60a5fa; position: relative; }
+        .btn-del { position: absolute; top: 5px; right: 5px; background: #ff4d4d; color: white; border: none; font-size: 10px; padding: 2px 5px; border-radius: 3px; cursor: pointer; }
+        .btn-add { width: 100%; padding: 8px; background: #444; border: 1px dashed #777; color: #aaa; cursor: pointer; font-size: 12px; border-radius: 4px; }
+        .btn-add:hover { border-color: #60a5fa; color: white; }
+
+        /* =========================================
+           2. Corporate Template Design
+           ========================================= */
+        .website-frame {
+            --c-primary: #1e3a8a; /* 네이비 블루 */
+            --c-accent: #3b82f6; /* 밝은 블루 */
+            --c-text: #1f2937;
+            --c-gray: #6b7280;
+            --c-bg: #f9fafb;
+            --mw: 1100px;
+        }
+
+        .c-header { position: sticky; top: 0; background: rgba(255,255,255,0.95); z-index: 99; border-bottom: 1px solid #e5e7eb; }
+        .c-nav { max-width: var(--mw); margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .c-logo { font-size: 20px; font-weight: 800; color: var(--c-primary); letter-spacing: -0.5px; }
+        .c-menu { display: flex; gap: 30px; font-size: 14px; font-weight: 600; color: var(--c-text); }
+        
+        .c-hero { height: 450px; background-size: cover; background-position: center; position: relative; display: flex; align-items: center; }
+        .c-hero::before { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, rgba(30, 58, 138, 0.9) 0%, rgba(30, 58, 138, 0.4) 100%); }
+        .c-hero-content { position: relative; z-index: 1; max-width: var(--mw); margin: 0 auto; padding: 0 20px; width: 100%; color: white; }
+        .c-hero h1 { font-size: 42px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; }
+        .c-hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin-bottom: 30px; }
+        .c-btn { display: inline-block; padding: 12px 30px; background: var(--c-accent); color: white; font-weight: 600; border-radius: 5px; text-decoration: none; transition: 0.3s; }
+        .c-btn:hover { background: #2563eb; }
+
+        .c-section { padding: 80px 0; }
+        .c-container { max-width: var(--mw); margin: 0 auto; padding: 0 20px; }
+        .c-title { font-size: 30px; font-weight: 800; color: var(--c-primary); text-align: center; margin-bottom: 50px; position: relative; }
+        .c-title::after { content:''; display: block; width: 40px; height: 3px; background: var(--c-accent); margin: 15px auto 0; }
+
+        /* Services */
+        .c-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .c-card { background: white; padding: 30px; border-radius: 10px; border: 1px solid #e5e7eb; transition: 0.3s; }
+        .c-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: var(--c-accent); }
+        .c-icon { width: 50px; height: 50px; background: #eff6ff; color: var(--c-accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 20px; }
+        .c-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+        .c-card p { font-size: 14px; color: var(--c-gray); line-height: 1.6; }
+
+        /* History */
+        .c-history-item { display: flex; gap: 30px; margin-bottom: 30px; position: relative; }
+        .c-year { font-size: 20px; font-weight: 800; color: var(--c-accent); width: 100px; text-align: right; flex-shrink: 0; }
+        .c-event { padding-left: 30px; border-left: 2px solid #e5e7eb; padding-bottom: 30px; }
+        .c-history-item:last-child .c-event { border-left: 2px solid transparent; }
+        .c-event::before { content:''; position: absolute; left: 124px; top: 8px; width: 10px; height: 10px; background: var(--c-accent); border-radius: 50%; }
+
+        /* Team */
+        .c-team-card { text-align: center; }
+        .c-team-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #eff6ff; }
+        .c-name { font-size: 16px; font-weight: 700; }
+        .c-pos { font-size: 13px; color: var(--c-accent); font-weight: 600; margin-bottom: 10px; display: block; }
+        .c-desc { font-size: 13px; color: var(--c-gray); }
+
+        /* Footer */
+        .c-footer { background: #111827; color: #9ca3af; padding: 50px 0; font-size: 14px; }
+        .c-foot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        @media (max-width: 768px) {
+            .c-hero h1 { font-size: 32px; }
+            .c-grid-3, .c-foot-grid { grid-template-columns: 1fr; }
+            .c-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="preview-area">
+        <div class="website-frame" id="website-root"></div>
+    </div>
+
+    <div class="editor-area">
+        <div class="editor-header">
+            <span>CORPORATE BUILDER</span>
+            <button onclick="downloadJSON()" style="background:none; border:none; color:#60a5fa; cursor:pointer; font-size:12px;">💾 저장</button>
+        </div>
+        <div class="editor-scroll" id="editor-panel"></div>
+        <div class="save-bar">
+            <button class="btn-save" onclick="renderWebsite()">✨ 사이트 반영하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. 초기 데이터 (기업형 템플릿)
+        let siteData = {
+            company: "NEXT INNOVATION",
+            hero: {
+                title: "기술로 세상을 연결하는<br>글로벌 IT 파트너",
+                desc: "고객의 비즈니스 성공을 위해 최고의 솔루션을 제공합니다. 혁신적인 기술력과 노하우를 경험해보세요.",
+                image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200"
+            },
+            services: [
+                { title: "IT 컨설팅", desc: "기업 환경에 최적화된 디지털 전환 전략을 수립해 드립니다." },
+                { title: "소프트웨어 개발", desc: "웹, 앱, 시스템 통합 등 비즈니스에 필요한 모든 개발을 지원합니다." },
+                { title: "유지보수", desc: "안정적인 시스템 운영을 위한 24시간 모니터링 서비스를 제공합니다." }
+            ],
+            history: [
+                { year: "2023", event: "글로벌 IT 어워드 대상 수상" },
+                { year: "2022", event: "시리즈 B 투자 유치 (100억)" },
+                { year: "2020", event: "(주)넥스트 이노베이션 설립" }
+            ],
+            team: [
+                { name: "김철수", pos: "CEO", desc: "前 구글 엔지니어", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200" },
+                { name: "이영희", pos: "CTO", desc: "카이스트 박사", img: "https://images.unsplash.com/photo-1573496359-0933d2768d98?q=80&w=200" },
+                { name: "박민수", pos: "Design Lead", desc: "레드닷 수상", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200" }
+            ],
+            contact: {
+                address: "서울 강남구 테헤란로 123, 10층",
+                email: "contact@nextinno.com",
+                tel: "02-1234-5678"
+            }
+        };
+
+        // 2. 에디터 렌더링
+        function renderEditor() {
+            const panel = document.getElementById('editor-panel');
+            let html = `
+                <div class="group"><div class="group-title">1. 회사 정보 & 메인</div>
+                    <div class="input-box"><span class="lbl">회사명 (로고)</span><input type="text" value="${siteData.company}" onchange="siteData.company=this.value"></div>
+                    <div class="input-box"><span class="lbl">메인 카피</span><textarea onchange="siteData.hero.title=this.value">${siteData.hero.title}</textarea></div>
+                    <div class="input-box"><span class="lbl">서브 설명</span><textarea onchange="siteData.hero.desc=this.value">${siteData.hero.desc}</textarea></div>
+                    <div class="input-box"><span class="lbl">배경 이미지 URL</span><input type="text" value="${siteData.hero.image}" onchange="siteData.hero.image=this.value"></div>
+                </div>
+            `;
+
+            // Services
+            html += `<div class="group"><div class="group-title">2. 비즈니스 영역</div>`;
+            siteData.services.forEach((item, i) => {
+                html += `<div class="list-item"><button class="btn-del" onclick="delItem('services', ${i})">삭제</button>
+                    <div class="input-box"><input type="text" value="${item.title}" onchange="siteData.services[${i}].title=this.value" placeholder="서비스명"></div>
+                    <div class="input-box"><textarea onchange="siteData.services[${i}].desc=this.value" placeholder="설명">${item.desc}</textarea></div>
+                </div>`;
+            });
+            html += `<button class="btn-add" onclick="addItem('services')">+ 서비스 추가</button></div>`;
+
+            // History
+            html += `<div class="group"><div class="group-title">3. 연혁 (History)</div>`;
+            siteData.history.forEach((item, i) => {
+                html += `<div class="list-item"><button class="btn-del" onclick="delItem('history', ${i})">삭제</button>
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" value="${item.year}" onchange="siteData.history[${i}].year=this.value" style="width:60px;" placeholder="년도">
+                        <input type="text" value="${item.event}" onchange="siteData.history[${i}].event=this.value" placeholder="내용">
+                    </div>
+                </div>`;
+            });
+            html += `<button class="btn-add" onclick="addItem('history')">+ 연혁 추가</button></div>`;
+
+            // Team
+            html += `<div class="group"><div class="group-title">4. 팀원 소개</div>`;
+            siteData.team.forEach((item, i) => {
+                html += `<div class="list-item"><button class="btn-del" onclick="delItem('team', ${i})">삭제</button>
+                    <input type="text" value="${item.name}" onchange="siteData.team[${i}].name=this.value" placeholder="이름" style="margin-bottom:5px;">
+                    <input type="text" value="${item.pos}" onchange="siteData.team[${i}].pos=this.value" placeholder="직책" style="margin-bottom:5px;">
+                    <input type="text" value="${item.img}" onchange="siteData.team[${i}].img=this.value" placeholder="사진 URL">
+                </div>`;
+            });
+            html += `<button class="btn-add" onclick="addItem('team')">+ 멤버 추가</button></div>`;
+
+            // Contact
+            html += `<div class="group"><div class="group-title">5. 하단 정보</div>
+                <div class="input-box"><span class="lbl">주소</span><input type="text" value="${siteData.contact.address}" onchange="siteData.contact.address=this.value"></div>
+                <div class="input-box"><span class="lbl">이메일</span><input type="text" value="${siteData.contact.email}" onchange="siteData.contact.email=this.value"></div>
+                <div class="input-box"><span class="lbl">전화번호</span><input type="text" value="${siteData.contact.tel}" onchange="siteData.contact.tel=this.value"></div>
+            </div>`;
+
+            panel.innerHTML = html;
+        }
+
+        // 3. 웹사이트 렌더링
+        function renderWebsite() {
+            const root = document.getElementById('website-root');
+            let html = `
+                <div class="c-header"><div class="c-nav"><div class="c-logo">${siteData.company}</div><div class="c-menu"><span>Service</span><span>History</span><span>Team</span><span>Contact</span></div></div></div>
+                <div class="c-hero" style="background-image: url('${siteData.hero.image}')">
+                    <div class="c-hero-content">
+                        <h1>${siteData.hero.title}</h1>
+                        <p>${siteData.hero.desc}</p>
+                        <a href="#" class="c-btn">문의하기</a>
+                    </div>
+                </div>
+                <div class="c-section"><div class="c-container">
+                    <div class="c-title">Our Services</div>
+                    <div class="c-grid-3">
+                        ${siteData.services.map(s => `<div class="c-card"><div class="c-icon"><i class="fas fa-check"></i></div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('')}
+                    </div>
+                </div></div>
+                <div class="c-section" style="background:var(--c-bg)"><div class="c-container">
+                    <div class="c-title">History</div>
+                    <div style="max-width:700px; margin:0 auto;">
+                        ${siteData.history.map(h => `<div class="c-history-item"><div class="c-year">${h.year}</div><div class="c-event">${h.event}</div></div>`).join('')}
+                    </div>
+                </div></div>
+                <div class="c-section"><div class="c-container">
+                    <div class="c-title">Leadership</div>
+                    <div class="c-grid-3">
+                        ${siteData.team.map(t => `<div class="c-team-card"><img src="${t.img}" class="c-team-img"><div class="c-name">${t.name}</div><span class="c-pos">${t.pos}</span><div class="c-desc">${t.desc}</div></div>`).join('')}
+                    </div>
+                </div></div>
+                <div class="c-footer"><div class="c-container c-foot-grid">
+                    <div><div style="font-size:18px; font-weight:bold; color:white; margin-bottom:15px;">${siteData.company}</div><p>${siteData.contact.address}</p><p>${siteData.contact.email}</p><p>${siteData.contact.tel}</p></div>
+                    <div style="text-align:right;"><p>© 2024 ${siteData.company}. All Rights Reserved.</p></div>
+                </div></div>
+            `;
+            root.innerHTML = html;
+        }
+
+        // 로직 핸들러
+        function addItem(key) {
+            if(key === 'services') siteData.services.push({title:"새 서비스", desc:"설명을 입력하세요"});
+            if(key === 'history') siteData.history.unshift({year:"2024", event:"새로운 도약"});
+            if(key === 'team') siteData.team.push({name:"이름", pos:"직책", desc:"소개", img:"https://via.placeholder.com/150"});
+            renderEditor(); renderWebsite();
+        }
+        function delItem(key, idx) {
+            if(confirm('삭제하시겠습니까?')) { siteData[key].splice(idx, 1); renderEditor(); renderWebsite(); }
+        }
+        function downloadJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(siteData));
+            const a = document.createElement('a'); a.href = dataStr; a.download = "corporate_data.json"; a.click();
+        }
+
+        window.onload = function() { renderEditor(); renderWebsite(); }
+    </script>
+</body>
+</html>
