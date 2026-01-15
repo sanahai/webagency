@@ -5,56 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>포트폴리오 | 골든웨이브</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { margin:0; font-family:'Pretendard'; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
-        header a { text-decoration: none; color: #333; font-weight: bold; font-size:14px; margin-left:20px;}
-        footer { background: #0a1122; color: #999; padding: 40px 0; text-align: center; }
-        .btn-primary { background: #0055ff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; }
+        /* 기본 스타일 (index.html과 통일) */
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
+        body { margin:0; font-family:'Manrope', 'Pretendard'; color:var(--text); line-height:1.6; word-break:keep-all; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        
+        /* [수정 1] 헤더 스타일 index.html과 동일하게 적용 */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .nav-menu { display: flex; gap: 30px; font-weight: 700; font-size: 15px; }
+        .nav-menu a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: white; padding: 10px 20px; border-radius: 5px; font-weight: 700; font-size: 14px; }
 
-        .pf-hero { padding: 60px 0; text-align: center; background: #f9fafb; }
-        .pf-hero img { width: 100%; max-width: 800px; border-radius: 10px; margin-top: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        /* Hero Section */
+        .pf-hero { padding: 140px 0 60px; text-align: center; background: #f9fafb; }
+        .pf-hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 15px; color: var(--dark); }
+        /* [수정 3] 이미지 스타일 보정 및 그림자 추가 */
+        .pf-hero img { width: 100%; max-width: 900px; border-radius: 12px; margin-top: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
         
-        /* [수정] 간격 축소 */
-        .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px 0; }
-        .pf-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; }
-        .pf-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        /* [수정 2] 그리드 4열로 변경 (repeat(4, 1fr)) */
+        .pf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 60px 0; }
         
-        /* [수정] 세로 이미지 적용 (Aspect Ratio 3:4) */
+        .pf-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; }
+        .pf-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
+        
+        /* 세로 이미지 비율 (3:4) 유지 */
         .pf-img { width: 100%; aspect-ratio: 3/4; background: #eee; }
         .pf-img img { width: 100%; height: 100%; object-fit: cover; }
         
         .pf-info { padding: 15px; }
-        .pf-cat { color: #0055ff; font-weight: bold; font-size: 12px; }
-        .cta { text-align: center; padding: 60px 0; background: #0055ff; color: white; }
+        .pf-cat { color: var(--primary); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .pf-title { font-weight: 700; font-size: 14px; color: var(--dark); }
+        
+        /* CTA Section */
+        .cta { text-align: center; padding: 80px 0; background: linear-gradient(135deg, #0055ff, #002299); color: white; }
+        .btn-cta { background: #fbbf24; color: #111; padding: 15px 40px; text-decoration: none; font-weight: 800; border-radius: 8px; display: inline-block; margin-top: 20px; }
+        
+        /* Footer */
+        footer { background: #0a1122; color: #94a3b8; padding: 40px 0; text-align: center; font-size: 13px; }
+
+        /* 반응형 처리 */
+        @media (max-width: 1024px) { 
+            .pf-grid { grid-template-columns: repeat(3, 1fr); } /* 태블릿 3열 */
+        }
+        @media (max-width: 768px) { 
+            .nav-menu { display: none; } /* 모바일에서 메뉴 숨김 (간소화) */
+            .pf-grid { grid-template-columns: repeat(2, 1fr); } /* 모바일 2열 */
+            .pf-hero h1 { font-size: 32px; }
+        }
     </style>
 </head>
 <body>
-    <header class="container">
-        <a href="index.html" style="font-size:20px;">골든웨이브</a>
-        <div style="display:flex; gap:20px;">
-            <a href="features.html">기능</a><a href="portfolio.html">포트폴리오</a><a href="pricing.html">가격</a><a href="faq.html">FAQ</a>
+    <header>
+        <div class="container nav-wrap">
+            <a href="index.html" class="logo"><i class="fas fa-layer-group"></i> 골든웨이브</a>
+            <ul class="nav-menu">
+                <li><a href="features.html">기능</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="pricing.html">가격</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+            <a href="start_building.html" class="btn-primary">Start Building</a>
         </div>
-        <a href="start_building.html" class="btn-primary">Start Building</a>
     </header>
 
     <div class="pf-hero">
         <div class="container">
             <h1>Our Portfolio</h1>
-            <p>골든웨이브의 다양한 제작 사례를 확인하세요.</p>
-            <img src="https://images.unsplash.com/photo-1467232065839-41ed11f4d914?q=80&w=1000">
+            <p style="font-size: 18px; color: #555;">골든웨이브와 함께 성장하고 있는 파트너들을 소개합니다.</p>
+            <img src="https://images.unsplash.com/photo-1467232065839-41ed11f4d914?q=80&w=1200&auto=format&fit=crop" alt="Portfolio Highlight">
         </div>
     </div>
 
     <div class="container pf-grid">
         <script>
-            // 30개 세로 이미지 생성
-            for(let i=1; i<=30; i++) {
+            // 30개 세로 이미지 생성 스크립트 (기존 유지)
+            // 이미지가 로딩될 때마다 랜덤하게 다른 이미지를 불러오도록 설정
+            const categories = ['Beauty', 'Corporate', 'Medical', 'Restaurant', 'Portfolio', 'Startup'];
+            for(let i=1; i<=32; i++) { // 4열 배치에 맞게 32개로 살짝 늘림 (4의 배수)
+                const cat = categories[i % categories.length];
                 document.write(`
                     <div class="pf-card">
-                        <div class="pf-img"><img src="https://source.unsplash.com/random/300x400?website,vertical&sig=${i}"></div>
-                        <div class="pf-info"><span class="pf-cat">Category ${i}</span><div style="font-weight:bold;">Project ${i}</div></div>
+                        <div class="pf-img"><img src="https://source.unsplash.com/random/300x400?website,${cat}&sig=${i}" loading="lazy"></div>
+                        <div class="pf-info">
+                            <span class="pf-cat">${cat}</span>
+                            <div class="pf-title">Project Reference ${i}</div>
+                        </div>
                     </div>
                 `);
             }
@@ -62,12 +105,16 @@
     </div>
 
     <div class="cta">
-        <h2>내 비즈니스도 이렇게 만들고 싶다면?</h2><br>
-        <a href="start_building.html" style="background:#fbbf24; color:#111; padding:15px 30px; text-decoration:none; font-weight:bold; border-radius:5px;">제작 신청하기</a>
+        <h2 style="font-size: 32px; font-weight: 800;">내 비즈니스도 이렇게 만들고 싶다면?</h2>
+        <p style="opacity: 0.9; margin-top: 10px;">10만원으로 평생 소유하는 웹사이트를 만들어보세요.</p>
+        <a href="start_building.html" class="btn-cta">제작 신청하기</a>
     </div>
 
     <footer>
-        <div class="container"><p>상호명: 골든웨이브 | 대표: 이동길</p><p>golden2378@naver.com</p></div>
+        <div class="container">
+            <p style="margin-bottom: 5px;">상호명: 골든웨이브 | 대표: 이동길 | 사업자등록번호: 326-58-00636</p>
+            <p>golden2378@naver.com</p>
+        </div>
     </footer>
 </body>
 </html>
