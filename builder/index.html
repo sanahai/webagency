@@ -13,9 +13,10 @@
         body { font-family: 'Manrope', 'Pretendard'; color: var(--text); margin:0; line-height:1.6; word-break:keep-all; overflow-x:hidden; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .section { padding: 60px 0; }
         
-        /* Header */
+        /* [수정 3, 6] 섹션 간격 30% 축소 (기존 50~60px -> 35px) */
+        .section { padding: 35px 0; }
+
         header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
         .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 22px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
@@ -23,63 +24,48 @@
         .nav-menu a:hover { color: var(--primary); }
         .btn-primary { background: var(--primary); color: white; padding: 12px 25px; border-radius: 5px; font-weight: 700; }
         .btn-outline { border: 1px solid #ddd; color: var(--dark); padding: 12px 25px; border-radius: 5px; font-weight: 700; background: transparent; }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .mobile-menu-btn { display: none; font-size: 24px; cursor: pointer; }
 
-        /* [수정 1] 제목 색상 변경 (검정 -> 딥 블루 #003bb3) */
-        h1, h2, h3 { font-weight: 800; letter-spacing: -0.5px; color: #003bb3; line-height: 1.3; }
-        .sec-title { font-size: 38px; margin-bottom: 15px; color: #003bb3; }
-
-        /* Hero */
-        .hero { padding: 180px 0 100px; position: relative; overflow: hidden; background: #fff; }
+        .hero { padding: 160px 0 80px; position: relative; overflow: hidden; background: #fff; }
         .hero-bg-circle { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: linear-gradient(45deg, #eef2ff, #faf5ff); top: -200px; right: -100px; z-index: 0; }
         .hero-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
-        .hero h1 { font-size: 58px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .hero h1 { font-size: 58px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; color: #003bb3; }
         
-        .animated-text {
-            background: linear-gradient(to right, #0055ff, #00d2ff, #0055ff);
-            background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
+        .animated-text { background: linear-gradient(to right, #0055ff, #00d2ff, #0055ff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 3s linear infinite; }
         @keyframes shine { to { background-position: 200% center; } }
 
         .hero-text p { font-size: 18px; color: #4b5563; margin-bottom: 40px; }
-        .hero-badges { display: flex; gap: 10px; margin-bottom: 30px; }
+        .hero-badges { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
         .badge { background: #eff6ff; color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(0,85,255,0.1); }
         .hero-visual img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); animation: float 6s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* Features (ZigZag) */
         .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
         .bg-gray { background-color: var(--bg-gray); }
-        .fb-text h2 { font-size: 36px; font-weight: 800; margin-bottom: 20px; }
+        .fb-text { text-align: center; }
+        .fb-text h2 { font-size: 36px; font-weight: 800; margin-bottom: 20px; color: #003bb3; }
+        .fb-list { display: inline-block; text-align: left; }
         .fb-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: 600; font-size: 16px; }
         .fb-img img { width: 100%; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .separator { display: flex; justify-content: center; gap: 60px; font-size: 30px; color: #cbd5e1; padding: 40px 0; }
+        .separator { display: flex; justify-content: center; gap: 60px; font-size: 30px; color: #cbd5e1; padding: 30px 0; }
 
-        /* Portfolio Grid */
         .case-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; }
         .case-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; }
         .case-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
-        .case-img { height: 140px; background: #eee; }
+        .case-img { height: 250px; background: #eee; }
         .case-img img { width: 100%; height: 100%; object-fit: cover; }
         .case-info { padding: 12px; }
         .case-cat { font-size: 10px; font-weight: 800; color: var(--primary); display: block; margin-bottom: 4px; }
         .case-title { font-size: 13px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-        /* Reviews */
         .review-wrap { overflow: hidden; white-space: nowrap; position: relative; }
-        .review-wrap::before, .review-wrap::after { content: ""; position: absolute; top: 0; width: 100px; height: 100%; z-index: 2; pointer-events: none; }
-        .review-wrap::before { left: 0; background: linear-gradient(to right, #f9fafb, transparent); }
-        .review-wrap::after { right: 0; background: linear-gradient(to left, #f9fafb, transparent); }
-        
         .review-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         .review-track.reverse { animation-direction: reverse; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .r-card { width: 260px; background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee; white-space: normal; flex-shrink: 0; }
 
-        /* Templates */
         .sec-header { text-align: center; max-width: 700px; margin: 0 auto 40px; }
+        .sec-title { font-size: 38px; font-weight: 800; margin-bottom: 10px; color: #003bb3; }
         
         .tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
         .tpl-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; }
@@ -88,29 +74,30 @@
         .tpl-info { padding: 20px; text-align: center; }
         .tpl-custom { background: white; border: 2px dashed #999; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 300px; color: #333; }
 
-        /* Comparison Table */
         .comp-table { width: 100%; border-collapse: collapse; text-align: center; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 12px; overflow: hidden; }
         .comp-table th { background: #f9fafb; padding: 20px; font-weight: 800; border-bottom: 1px solid #eee; }
         .comp-table td { padding: 20px; border-bottom: 1px solid #eee; font-size: 15px; }
         .comp-table .brand { background: #eff6ff; color: var(--primary); }
 
-        /* CTA */
-        .cta-box { background: linear-gradient(135deg, #0055ff, #002299); padding: 60px 30px; text-align: center; border-radius: 20px; color: white; margin: 0 auto; max-width: 70%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        .cta-box h2 { color: white; } /* CTA 안의 제목은 흰색 유지 */
+        .cta-box { background: linear-gradient(135deg, #0a1122 0%, #002299 100%); padding: 60px 30px; text-align: center; border-radius: 20px; color: white; margin: 0 auto; max-width: 70%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .cta-box h2 { font-size: 46px; font-weight: 800; margin-bottom: 15px; color: white; } 
+        .cta-box p { color: #e0e0e0; }
         .btn-cta { background: var(--accent); color: #111; padding: 15px 40px; border-radius: 8px; font-weight: 800; margin-top: 20px; display: inline-block; font-size: 18px; }
 
-        /* Footer */
-        footer { background: var(--dark); color: #999; padding: 40px 0; font-size: 13px; }
+        footer { background: var(--dark); color: #999; padding: 35px 0; font-size: 13px; }
         .footer-grid { display: flex; justify-content: space-between; }
         
+        /* [수정 1] 반응형 처리 */
         @media (max-width: 768px) { 
+            .nav-menu, .nav-right { display: none; } .mobile-menu-btn { display: block; }
             .hero-grid, .fb-grid, .tpl-grid, .footer-grid { display: block; } 
-            .hero-text { margin-bottom: 50px; }
-            .case-grid { grid-template-columns: 1fr 1fr; }
-            .nav-menu { display: none; }
+            .hero-text, .fb-text, .footer-info { margin-bottom: 40px; text-align: center; }
+            .fb-list { display: inline-block; }
+            .case-grid { grid-template-columns: repeat(2, 1fr); }
             .fb-img { margin-bottom: 30px; }
             .cta-box { max-width: 100%; }
             .comp-table { display: block; overflow-x: auto; white-space: nowrap; }
+            .footer-right { text-align: center; margin-top: 20px; }
         }
     </style>
 </head>
@@ -125,6 +112,7 @@
                 <li><a href="faq.html">FAQ</a></li>
             </ul>
             <a href="start_building.html" class="btn-primary">Start Building</a>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
         </div>
     </header>
 
@@ -133,7 +121,7 @@
         <div class="container hero-grid">
             <div class="hero-text" data-aos="fade-right">
                 <h1>비즈니스 성장을 위한<br><span class="animated-text">완벽한 노코드 솔루션</span></h1>
-                <p style="font-size:18px; color:#666; margin-bottom:40px;">개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>골든웨이브가 이 모든 문제를 단 10만원에 해결해 드립니다.</p>
+                <p>개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>골든웨이브가 이 모든 문제를 단 10만원에 해결해 드립니다.</p>
                 <div class="hero-badges">
                     <span class="badge"><i class="fas fa-check"></i> 평생 무료 서버</span>
                     <span class="badge"><i class="fas fa-check"></i> 24시간 완성</span>
@@ -145,7 +133,7 @@
                 </div>
             </div>
             <div class="hero-img" data-aos="fade-left">
-                <img src="https://cdni.iconscout.com/illustration/premium/thumb/web-development-2974925-2477511.png" alt="Web Agency">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000" alt="Web Agency">
             </div>
         </div>
     </section>
@@ -157,7 +145,7 @@
     <section class="section">
         <div class="container fb-grid">
             <div class="fb-img" data-aos="fade-right">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000" alt="Web Development">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000" alt="Web Dev">
             </div>
             <div class="fb-text" data-aos="fade-left">
                 <h2>압도적인 제작 속도와<br>직관적인 수정 경험</h2>
@@ -171,9 +159,7 @@
         </div>
     </section>
 
-    <div class="separator">
-        <i class="fas fa-code"></i> <i class="fas fa-server"></i> <i class="fas fa-rocket"></i>
-    </div>
+    <div class="separator"><i class="fas fa-code"></i> <i class="fas fa-server"></i> <i class="fas fa-rocket"></i></div>
 
     <section class="section bg-gray">
         <div class="container fb-grid">
@@ -193,14 +179,8 @@
             <div class="case-grid">
                 <script>
                     const cats = ['BEAUTY','CORP','CAFE','PORTFOLIO','MEDICAL','LAW','SHOP','GYM','INTERIOR','FOOD'];
-                    // 안정적인 세로 이미지
-                    const imgIds = [
-                        'photo-1515378791036-0648a3ef77b2', 'photo-1522202176988-66273c2fd55f', 
-                        'photo-1531482615713-2afd69097998', 'photo-1507679799987-c73779587ccf',
-                        'photo-1600880292203-757bb62b4baf', 'photo-1556761175-5973dc0f32e7',
-                        'photo-1557804506-669a67965ba0', 'photo-1521017432531-fbd92d768814',
-                        'photo-1497215728101-856f4ea42174', 'photo-1551288049-bebda4e38f71'
-                    ];
+                    // 안정적인 세로 이미지 ID
+                    const imgIds = ['photo-1515378791036-0648a3ef77b2', 'photo-1522202176988-66273c2fd55f', 'photo-1531482615713-2afd69097998', 'photo-1507679799987-c73779587ccf', 'photo-1600880292203-757bb62b4baf', 'photo-1556761175-5973dc0f32e7', 'photo-1557804506-669a67965ba0', 'photo-1521017432531-fbd92d768814', 'photo-1497215728101-856f4ea42174', 'photo-1551288049-bebda4e38f71'];
                     for(let i=0; i<10; i++){
                         document.write(`<div class="case-card"><div class="case-img"><img src="https://images.unsplash.com/${imgIds[i]}?q=80&w=400&h=533&fit=crop"></div><div class="case-info"><span class="case-cat">${cats[i]}</span><div class="case-title">Project ${i+1}</div></div></div>`);
                     }
@@ -212,21 +192,13 @@
 
     <section class="section bg-gray" style="overflow:hidden;">
         <div class="container"><div class="sec-header"><h2 class="sec-title">Customer Reviews</h2></div></div>
-        <div class="review-wrap">
-            <div class="review-track">
-                <script>
-                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:13px; margin:10px 0;">"10만원에 이 퀄리티라니 믿기지 않습니다. 강력 추천합니다."</p><strong style="font-size:12px;">김민수 대표</strong></div>`);
-                </script>
-            </div>
-        </div>
+        <div class="review-wrap"><div class="review-track">
+            <script>for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:13px; margin:10px 0;">"10만원에 이 퀄리티라니 믿기지 않습니다. 강력 추천합니다."</p><strong style="font-size:12px;">김민수 대표</strong></div>`);</script>
+        </div></div>
         <div style="height:20px;"></div>
-        <div class="review-wrap">
-            <div class="review-track reverse">
-                <script>
-                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:13px; margin:10px 0;">"디자인이 너무 세련되고 수정도 간편해서 좋아요."</p><strong style="font-size:12px;">이영희 원장</strong></div>`);
-                </script>
-            </div>
-        </div>
+        <div class="review-wrap"><div class="review-track reverse">
+            <script>for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:13px; margin:10px 0;">"디자인이 너무 세련되고 수정도 간편해서 좋아요."</p><strong style="font-size:12px;">이영희 원장</strong></div>`);</script>
+        </div></div>
     </section>
 
     <section class="section" id="templates">
@@ -238,10 +210,7 @@
                 <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800"></div><div class="tpl-info"><h3>Restaurant</h3><p>식당 / 카페</p></div></div>
                 <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800"></div><div class="tpl-info"><h3>Portfolio</h3><p>개인 / 프리랜서</p></div></div>
                 <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800"></div><div class="tpl-info"><h3>Medical</h3><p>병원 / 한의원</p></div></div>
-                <div class="tpl-custom">
-                    <i class="fas fa-palette" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
-                    <h3>Custom Color</h3><p style="color:#666;">브랜드 컬러 변경 가능</p>
-                </div>
+                <div class="tpl-custom"><i class="fas fa-palette" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i><h3>Custom Color</h3><p style="color:#666;">브랜드 컬러 변경 가능</p></div>
             </div>
         </div>
     </section>
@@ -250,14 +219,7 @@
         <div class="container">
             <div class="sec-header"><h2 class="sec-title">Why choose 100K WEB?</h2></div>
             <table class="comp-table">
-                <thead>
-                    <tr>
-                        <th>구분</th>
-                        <th class="brand">골든웨이브</th>
-                        <th>저가 에이전시</th>
-                        <th>일반 에이전시</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>구분</th><th class="brand">골든웨이브</th><th>저가 에이전시</th><th>일반 에이전시</th></tr></thead>
                 <tbody>
                     <tr><td>비용</td><td style="color:blue; font-weight:bold;">100,000원</td><td>300,000원</td><td>200만원+</td></tr>
                     <tr><td>서버비</td><td style="color:blue; font-weight:bold;">평생 무료</td><td>별도 구매</td><td>매월 발생</td></tr>
@@ -272,8 +234,8 @@
         <div class="container">
             <div class="sec-header"><h2 class="sec-title">FAQ</h2></div>
             <div style="max-width:800px; margin:0 auto 30px;">
-                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 정말 매달 내는 서버비가 0원인가요?</strong><br><span style="color:#666; font-size:14px;">네 맞습니다. 최신 정적 호스팅 기술을 통해 평생 무료입니다. 트래픽이 늘어나도 추가 비용이 없습니다.</span></div>
-                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 수정은 어떻게 하나요?</strong><br><span style="color:#666; font-size:14px;">전용 빌더 링크를 통해 누구나 쉽게 수정 가능합니다. 블로그처럼 간편하게 텍스트와 이미지를 변경하세요.</span></div>
+                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 정말 매달 내는 서버비가 0원인가요?</strong><br><span style="color:#666; font-size:14px;">네 맞습니다. 최신 정적 호스팅 기술을 통해 평생 무료입니다.</span></div>
+                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 수정은 어떻게 하나요?</strong><br><span style="color:#666; font-size:14px;">전용 빌더 링크를 통해 누구나 쉽게 수정 가능합니다.</span></div>
                 <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 환불 가능한가요?</strong><br><span style="color:#666; font-size:14px;">작업 시작 전 100% 환불 가능합니다.</span></div>
             </div>
             <div style="text-align:center;"><a href="faq.html" class="btn-outline">더 많은 FAQ 보기</a></div>
@@ -294,7 +256,7 @@
                 <div style="font-size:20px; font-weight:800; color:white; margin-bottom:15px;">골든웨이브</div>
                 <p>상호명 : 골든웨이브 | 대표 : 이동길 | 사업자등록번호: 326-58-00636<br>주소: 인천광역시 미추홀구 석정로140번길 29</p>
             </div>
-            <div style="text-align:right;">
+            <div style="text-align:right;" class="footer-right">
                 <p><strong>Customer Center</strong></p>
                 <p>golden2378@naver.com</p>
                 <div style="margin-top:15px; font-size:20px; color:white;"><i class="fas fa-comment"></i></div>
