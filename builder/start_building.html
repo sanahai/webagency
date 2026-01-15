@@ -5,48 +5,208 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>제작 신청 | 골든웨이브</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Pretendard'; background: #f3f4f6; padding: 40px 20px; margin:0; }
-        .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h1 { text-align: center; margin-bottom: 20px; color: #0a1122; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
-        input[type="text"], input[type="email"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .radio-group { display: flex; gap: 20px; }
-        .btn-submit { width: 100%; padding: 15px; background: #0055ff; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .note { font-size: 13px; color: #666; margin-top: 20px; text-align: center; line-height: 1.6; }
+        /* 공통 스타일 (index.html과 동일) */
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
+        body { font-family: 'Manrope', 'Pretendard'; background: #f3f4f6; margin:0; color: var(--text); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+        /* [수정 1] 헤더 추가 */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .nav-menu { display: flex; gap: 30px; font-weight: 700; font-size: 15px; }
+        .nav-menu a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: white; padding: 10px 20px; border-radius: 5px; font-weight: 700; font-size: 14px; }
+
+        /* Form Layout */
+        .page-wrap { padding-top: 100px; padding-bottom: 60px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        .form-container { max-width: 650px; width: 100%; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header h1 { margin-bottom: 10px; color: var(--dark); font-size: 28px; }
+        .form-header p { font-size: 14px; color: #666; white-space: pre-line; }
+
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 800; margin-bottom: 8px; font-size: 14px; color: var(--dark); }
+        .sub-label { font-size: 12px; color: #888; font-weight: normal; margin-left: 5px; }
+        
+        input[type="text"], input[type="email"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; }
+        textarea { height: 100px; resize: vertical; }
+        
+        .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .radio-item, .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+        input[type="radio"], input[type="checkbox"] { width: auto; margin: 0; cursor: pointer; }
+
+        .btn-submit { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-submit:hover { background: #003bb3; }
+        
+        .note { font-size: 13px; color: #666; margin-top: 15px; text-align: center; background: #f9fafb; padding: 10px; border-radius: 8px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .form-container { padding: 25px; }
+        }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>웹사이트 제작 신청</h1>
-        <p style="text-align:center; color:#666; margin-bottom:30px;">작성해주신 내용은 <strong>golden2378@naver.com</strong>으로 전송됩니다.</p>
-        
-        <form>
-            <div class="form-group"><label>신청자명 (회사명)</label><input type="text" id="name"></div>
-            <div class="form-group"><label>연락처</label><input type="text" id="phone"></div>
-            <div class="form-group"><label>이메일</label><input type="email" id="email"></div>
-            <div class="form-group"><label>업종</label><select id="cat"><option>뷰티</option><option>기업</option><option>식당</option><option>기타</option></select></div>
+
+    <header>
+        <div class="container nav-wrap">
+            <a href="index.html" class="logo"><i class="fas fa-layer-group"></i> 골든웨이브</a>
+            <ul class="nav-menu">
+                <li><a href="features.html">기능</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="pricing.html">가격</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+            <a href="start_building.html" class="btn-primary">Start Building</a>
+        </div>
+    </header>
+
+    <div class="page-wrap container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>웹사이트 제작 신청</h1>
+                <p>고객이 만족하실 수 있는 최고의 서비스를 드리기 위해 항상 최선을 다하겠습니다.<br>문의 주셔서 감사합니다. - 골든웨이브</p>
+            </div>
             
-            <div class="form-group">
-                <label>도메인 보유 여부</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="domain" value="없음" checked onclick="document.getElementById('domainInput').style.display='none'"> 없음 (무료도메인 사용)</label>
-                    <label><input type="radio" name="domain" value="있음" onclick="document.getElementById('domainInput').style.display='block'"> 있음</label>
+            <form id="applyForm">
+                <div class="form-group">
+                    <label>신청자명 (회사명)</label>
+                    <input type="text" id="name" placeholder="홍길동 / 골든웨이브">
                 </div>
-                <input type="text" id="domainInput" placeholder="보유하신 도메인 주소를 입력해주세요" style="display:none; margin-top:10px;">
-            </div>
+                
+                <div class="form-group">
+                    <label>연락처</label>
+                    <input type="text" id="phone" placeholder="010-1234-5678">
+                </div>
 
-            <div class="form-group"><label>요청사항</label><textarea id="desc" rows="4"></textarea></div>
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id="email" placeholder="example@naver.com">
+                </div>
 
-            <button type="button" class="btn-submit" onclick="alert('신청이 완료되었습니다! 곧 연락드리겠습니다.')">신청하기</button>
-            
-            <div class="note">
-                고객이 만족하실 수 있는 최고의 서비스를 드리기 위해 항상 최선을 다하겠습니다.<br>
-                문의 주셔서 감사합니다. - 골든웨이브
-            </div>
-        </form>
-        <div style="text-align:center; margin-top:20px;"><a href="index.html" style="color:#999; text-decoration:none;">← 메인으로 돌아가기</a></div>
+                <div class="form-group">
+                    <label>업종 선택</label>
+                    <select id="category">
+                        <option>에스테틱 / 뷰티</option>
+                        <option>기업 / 스타트업</option>
+                        <option>식당 / 카페</option>
+                        <option>개인 / 프리랜서</option>
+                        <option>병원 / 한의원</option>
+                        <option>기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>도메인 보유 여부</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="domain" value="없음" checked onclick="toggleDomainInput(false)"> 
+                            없음 (무료도메인 사용)
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="domain" value="있음" onclick="toggleDomainInput(true)"> 
+                            있음 (보유 도메인 연결)
+                        </label>
+                    </div>
+                    
+                    <div id="freeDomainGroup" style="margin-top:10px;">
+                        <label style="font-size:13px; color:#555;">원하는 무료 도메인 아이디 <span class="sub-label">* 영문/숫자</span></label>
+                        <input type="text" id="freeDomainId" placeholder="예: mybrand">
+                        <div style="font-size:12px; color:#888; margin-top:5px;">* 무료 도메인은 https://sanahai.github.io/입력하신아이디/ 형식으로 제공됩니다.</div>
+                    </div>
+
+                    <div id="ownDomainGroup" style="margin-top:10px; display:none;">
+                        <label style="font-size:13px; color:#555;">보유 도메인 주소</label>
+                        <input type="text" id="ownDomainAddr" placeholder="예: www.mybrand.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>유료 서비스 신청 (선택)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" value="없음"> 없음 (기본 무료 제작)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="메인 색상 변경"> 메인 색상 변경 (20,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="프로그램 5개 추가"> 프로그램 5개 추가 (10,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="보유 도메인 연결"> 보유 도메인 연결 (10,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="별도 도메인 구매"> 별도 도메인 구매 (25,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="리뷰 10개 추가"> 리뷰 10개 추가 (10,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="FAQ 10개 추가"> FAQ 10개 추가 (10,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="네이버 다이나믹 지도"> 네이버 다이나믹 지도 (10,000원)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>이미지 보유 여부</label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="image" value="있음" checked> 있음 (보유 이미지 사용)</label>
+                        <label class="radio-item"><input type="radio" name="image" value="없음"> 없음 (자체 이미지로 대체)</label>
+                    </div>
+                    <div style="font-size:12px; color:#e04f4f; margin-top:5px;">* 자체 이미지 대체 시 이미지에 따라 추후 수정이 안 될 수 있습니다.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>기타 요청사항</label>
+                    <textarea id="desc" placeholder="참고할 만한 사이트 주소나 특별히 원하시는 느낌이 있다면 적어주세요."></textarea>
+                </div>
+
+                <button type="button" class="btn-submit" onclick="submitForm()">신청서 제출하기</button>
+                
+                <div class="note">
+                    작성해주신 내용은 <strong>golden2378@naver.com</strong>으로 전송됩니다.
+                </div>
+            </form>
+        </div>
+        
+        <div style="text-align:center; margin-top:20px;">
+            <a href="index.html" style="color:#999; font-size:14px;">← 메인으로 돌아가기</a>
+        </div>
     </div>
+
+    <script>
+        function toggleDomainInput(hasDomain) {
+            const freeGroup = document.getElementById('freeDomainGroup');
+            const ownGroup = document.getElementById('ownDomainGroup');
+            
+            if (hasDomain) {
+                freeGroup.style.display = 'none';
+                ownGroup.style.display = 'block';
+            } else {
+                freeGroup.style.display = 'block';
+                ownGroup.style.display = 'none';
+            }
+        }
+
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            
+            if(!name || !phone) { alert('성함과 연락처를 입력해주세요.'); return; }
+            
+            // 폼 데이터 수집 (실제 전송용)
+            let paidServices = [];
+            document.querySelectorAll('.checkbox-group input:checked').forEach((cb) => {
+                paidServices.push(cb.value);
+            });
+
+            alert(`감사합니다, ${name}님!\n신청서가 golden2378@naver.com 으로 전송되었습니다.\n(담당자가 확인 후 연락드리겠습니다)`);
+            
+            // 메일 전송 시뮬레이션 (클라이언트 메일 열기)
+            const subject = `[제작신청] ${name}님 웹사이트 신청서`;
+            const body = `이름: ${name}%0D%0A연락처: ${phone}%0D%0A이메일: ${email}%0D%0A유료옵션: ${paidServices.join(', ')}%0D%0A요청사항: ${document.getElementById('desc').value}`;
+            
+            location.href = `mailto:golden2378@naver.com?subject=${subject}&body=${body}`;
+        }
+    </script>
 </body>
 </html>
