@@ -8,19 +8,20 @@
     <style>
         body { margin:0; font-family:'Pretendard'; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        header, footer { padding: 20px 0; text-align: center; border-bottom: 1px solid #eee; }
+        header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+        header a { text-decoration: none; color: #333; font-weight: bold; font-size:14px; margin-left:20px;}
+        footer { background: #0a1122; color: #999; padding: 40px 0; text-align: center; }
         .btn-primary { background: #0055ff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; }
-        footer { background: #0a1122; color: #999; border:none; }
 
         .pf-hero { padding: 60px 0; text-align: center; background: #f9fafb; }
         .pf-hero img { width: 100%; max-width: 800px; border-radius: 10px; margin-top: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         
-        /* 간격 축소 적용 */
+        /* [수정] 간격 축소 */
         .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px 0; }
         .pf-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; }
         .pf-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         
-        /* 세로 이미지 적용 (Aspect Ratio 3:4) */
+        /* [수정] 세로 이미지 적용 (Aspect Ratio 3:4) */
         .pf-img { width: 100%; aspect-ratio: 3/4; background: #eee; }
         .pf-img img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -30,8 +31,11 @@
     </style>
 </head>
 <body>
-    <header class="container" style="display:flex; justify-content:space-between; align-items:center;">
-        <a href="index.html" style="font-size:20px; font-weight:800; text-decoration:none; color:black;">골든웨이브</a>
+    <header class="container">
+        <a href="index.html" style="font-size:20px;">골든웨이브</a>
+        <div style="display:flex; gap:20px;">
+            <a href="features.html">기능</a><a href="portfolio.html">포트폴리오</a><a href="pricing.html">가격</a><a href="faq.html">FAQ</a>
+        </div>
         <a href="start_building.html" class="btn-primary">Start Building</a>
     </header>
 
