@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오 | 골든웨이브</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 공통 스타일 CSS */
+        body { margin:0; font-family:sans-serif; color:#333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header { padding: 15px 0; border-bottom: 1px solid #eee; text-align: center; }
+        
+        .pf-header { padding: 80px 0; text-align: center; background: #f9fafb; }
+        .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 60px 0; }
+        .pf-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .pf-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .pf-img { height: 200px; background: #eee; }
+        .pf-img img { width: 100%; height: 100%; object-fit: cover; }
+        .pf-info { padding: 15px; }
+        .pf-cat { color: #0055ff; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .pf-title { font-weight: bold; margin-top: 5px; }
+        
+        .cta { text-align: center; padding: 60px 0; background: #0055ff; color: white; }
+        .btn-cta { background: #fbbf24; color: #111; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        footer { background: #0a1122; color: #aaa; padding: 30px 0; text-align: center; font-size: 13px; }
 
+        @media (max-width: 768px) { .pf-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+            <a href="index.html" style="font-weight:800; font-size:20px; text-decoration:none; color:#000;">골든웨이브</a>
+            <a href="start_building.html" style="background:#0055ff; color:white; padding:10px 20px; border-radius:4px; text-decoration:none;">Start Building</a>
+        </div>
+    </header>
+
+    <div class="pf-header">
+        <div class="container">
+            <h1>Our Portfolio</h1>
+            <p>골든웨이브와 함께 성장하고 있는 파트너들을 소개합니다.</p>
+        </div>
+    </div>
+
+    <div class="container pf-grid">
+        <script>
+            const categories = ['Beauty', 'Corporate', 'Restaurant', 'Medical', 'Portfolio', 'Startup'];
+            for(let i=1; i<=30; i++) {
+                const cat = categories[i % categories.length];
+                document.write(`
+                    <div class="pf-card">
+                        <div class="pf-img"><img src="https://source.unsplash.com/random/400x300?${cat}&sig=${i}"></div>
+                        <div class="pf-info">
+                            <span class="pf-cat">${cat}</span>
+                            <div class="pf-title">Project Reference ${i}</div>
+                        </div>
+                    </div>
+                `);
+            }
+            // Note: If source.unsplash is slow, replace with placeholder images.
+        </script>
+        </div>
+
+    <div class="cta">
+        <h2>내 비즈니스도 이렇게 만들고 싶다면?</h2>
+        <br>
+        <a href="start_building.html" class="btn-cta">지금 제작 신청하기</a>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>상호명: 골든웨이브 | 대표: 이동길 | 사업자등록번호: 326-58-00636</p>
+            <p>golden2378@naver.com</p>
+        </div>
+    </footer>
+</body>
+</html>
