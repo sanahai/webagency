@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; --accent: #fbbf24; }
         body { margin:0; font-family:'Manrope', 'Pretendard'; color:var(--text); line-height:1.6; word-break:keep-all; }
         .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -19,24 +19,31 @@
         .nav-menu { display: flex; gap: 30px; font-weight: 700; list-style: none; font-size: 15px; }
         .btn-primary { background: var(--primary); color: white; padding: 12px 25px; border-radius: 5px; font-weight: 700; }
 
-        /* [수정 10] 중앙 정렬 */
         .hero { padding: 100px 0 50px; text-align: center; background: #f9fafb; }
         .hero h1 { font-size: 42px; font-weight: 800; color: #003bb3; margin-bottom: 20px; }
         .hero img { width: 100%; max-width: 600px; margin-top: 20px; border-radius: 10px; }
 
-        .faq-list { margin: 50px auto; }
+        .faq-list { margin: 40px auto; }
         .faq-item { border-bottom: 1px solid #eee; }
         .faq-q { padding: 20px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap:10px; text-align:center; }
         .faq-q:hover { color: #0055ff; }
         .faq-a { padding: 0 20px 20px; display: none; color: #666; background: #fff; line-height: 1.8; text-align: center; }
         .faq-item.active .faq-a { display: block; }
 
-        .cta { text-align: center; padding: 80px 0; background: #0055ff; color: white; }
+        /* [수정 4] 표준 CTA 스타일 */
+        .cta-box { background: linear-gradient(135deg, #0a1122 0%, #002299 100%); padding: 60px 30px; text-align: center; border-radius: 20px; color: white; margin: 0 auto; max-width: 70%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .cta-box h2 { font-size: 46px; font-weight: 800; margin-bottom: 15px; color: white; } 
+        .cta-box p { color: #e0e0e0; margin-bottom: 30px; }
+        .btn-cta { background: var(--accent); color: #111; padding: 15px 40px; border-radius: 8px; font-weight: 800; display: inline-block; font-size: 18px; }
         
-        footer { background: var(--dark); color: #999; padding: 40px 0; font-size: 13px; }
+        footer { background: var(--dark); color: #999; padding: 35px 0; font-size: 13px; }
         .footer-grid { display: flex; justify-content: space-between; max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
-        @media (max-width: 768px) { .nav-menu { display: none; } .footer-grid { flex-direction: column; text-align: center; gap: 20px; } }
+        @media (max-width: 768px) { 
+            .nav-menu { display: none; } 
+            .footer-grid { flex-direction: column; text-align: center; gap: 20px; } 
+            .cta-box { max-width: 100%; } .cta-box h2 { font-size: 32px; }
+        }
     </style>
 </head>
 <body>
@@ -64,10 +71,13 @@
         <div id="faqContainer"></div>
     </div>
 
-    <div class="cta">
-        <h2>더 궁금한 점이 있으신가요?</h2><br>
-        <a href="start_building.html" style="background:#fbbf24; color:#111; padding:15px 30px; text-decoration:none; border-radius:5px; font-weight:bold;">문의하기 / 신청하기</a>
-    </div>
+    <section class="container" style="margin-bottom:50px;">
+        <div class="cta-box">
+            <h2>Ready to grow your business?</h2>
+            <p>더 이상 망설이지 마세요. 커피 20잔 값이면 평생 소유할 수 있습니다.</p>
+            <a href="start_building.html" class="btn-cta">10만원으로 시작하기</a>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-grid">
