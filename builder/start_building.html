@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
         body { font-family: 'Manrope', 'Pretendard'; background: #f3f4f6; margin:0; color: #333; line-height: 1.6; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
         a { text-decoration: none; color: inherit; transition: 0.2s; }
@@ -29,7 +30,10 @@
         .form-group { margin-bottom: 25px; }
         label { display: block; font-weight: 800; margin-bottom: 8px; font-size: 14px; color: #0a1122; }
         input[type="text"], input[type="email"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .radio-group { display: flex; gap: 20px; }
+        .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .radio-item, .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+        input[type="radio"], input[type="checkbox"] { width: auto; margin: 0; cursor: pointer; }
+
         .btn-submit { width: 100%; padding: 16px; background: #0055ff; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .note { font-size: 13px; color: #666; margin-top: 15px; text-align: center; background: #f9fafb; padding: 10px; border-radius: 8px; }
 
@@ -66,10 +70,20 @@
                 <div class="form-group">
                     <label>도메인 보유 여부</label>
                     <div class="radio-group">
-                        <label><input type="radio" name="domain" value="없음" checked onclick="document.getElementById('domainInput').style.display='none'"> 없음</label>
-                        <label><input type="radio" name="domain" value="있음" onclick="document.getElementById('domainInput').style.display='block'"> 있음</label>
+                        <label class="radio-item"><input type="radio" name="domain" value="없음" checked onclick="toggleDomainInput(false)"> 없음</label>
+                        <label class="radio-item"><input type="radio" name="domain" value="있음" onclick="toggleDomainInput(true)"> 있음</label>
                     </div>
-                    <input type="text" id="domainInput" placeholder="보유하신 도메인 주소를 입력해주세요" style="display:none; margin-top:10px;">
+                    <div id="freeDomainGroup" style="margin-top:10px;"><input type="text" id="freeDomainId" placeholder="원하는 무료 도메인 아이디 (예: mybrand)"></div>
+                    <div id="ownDomainGroup" style="margin-top:10px; display:none;"><input type="text" id="ownDomainAddr" placeholder="보유 도메인 주소"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>유료 서비스 신청 (선택)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" value="메인 색상 변경"> 메인 색상 변경 (20,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="프로그램 5개 추가"> 프로그램 5개 추가 (10,000원)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="보유 도메인 연결"> 보유 도메인 연결 (10,000원)</label>
+                    </div>
                 </div>
 
                 <div class="form-group"><label>기타 요청사항</label><textarea id="desc" rows="4"></textarea></div>
@@ -83,14 +97,23 @@
     </div>
 
     <script>
+        function toggleDomainInput(hasDomain) {
+            document.getElementById('freeDomainGroup').style.display = hasDomain ? 'none' : 'block';
+            document.getElementById('ownDomainGroup').style.display = hasDomain ? 'block' : 'none';
+        }
+
         function submitForm() {
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
             if(!name || !phone) { alert('성함과 연락처를 입력해주세요.'); return; }
             
+            // 유료 서비스 체크박스 값 수집
+            let paidServices = [];
+            document.querySelectorAll('.checkbox-group input:checked').forEach((cb) => { paidServices.push(cb.value); });
+
             const subject = `[제작신청] ${name}님 웹사이트 신청서`;
-            const body = `이름: ${name}%0D%0A연락처: ${phone}%0D%0A이메일: ${email}%0D%0A요청사항: ${document.getElementById('desc').value}`;
+            const body = `이름: ${name}%0D%0A연락처: ${phone}%0D%0A이메일: ${email}%0D%0A유료옵션: ${paidServices.join(', ')}%0D%0A요청사항: ${document.getElementById('desc').value}`;
             
             location.href = `mailto:golden2378@naver.com?subject=${subject}&body=${body}`;
         }
