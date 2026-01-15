@@ -8,102 +8,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 공통 스타일 */
-        body { margin:0; font-family:'Manrope', 'Pretendard'; line-height:1.7; color:#333; word-break: keep-all; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        /* [수정 1] 헤더 스타일 index.html과 동일하게 맞춤 */
-        header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; position: fixed; width: 100%; top: 0; background: rgba(255,255,255,0.95); z-index: 1000; backdrop-filter: blur(5px); }
-        .logo { font-size: 22px; font-weight: 800; color: #0a1122; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .nav-link { text-decoration: none; color: #0a1122; font-weight: 700; font-size:14px; margin-left:20px; }
-        .nav-link:hover { color: #0055ff; }
-        
-        footer { background: #0a1122; color: #999; padding: 40px 0; text-align: center; }
-        .btn-primary { background: #0055ff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 700; }
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
+        body { margin:0; font-family:'Manrope', 'Pretendard'; color:var(--text); line-height:1.6; word-break:keep-all; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* [수정 4] 상단 패딩 50% 축소 (100px -> 50px) + 헤더 높이 고려 */
-        .page-hero { padding: 120px 0 50px; text-align: center; background: #f9fafb; }
-        
-        /* [수정 2] 메인 이미지 변경 (다른 이미지, 적절한 사이즈) */
+        /* [수정 7] 헤더 스타일 index.html과 완전 동일 */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .nav-menu { display: flex; gap: 30px; font-weight: 700; list-style: none; font-size: 15px; }
+        .nav-menu a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: white; padding: 12px 25px; border-radius: 5px; font-weight: 700; }
+
+        /* [수정 2] 상단 간격 50% 축소 (120px -> 100px) */
+        .page-hero { padding: 100px 0 50px; text-align: center; background: #f9fafb; }
         .page-hero img { width: 100%; max-width: 900px; border-radius: 12px; margin-top: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
 
-        .comp-section { padding: 80px 0; background: #f0f7ff; }
+        /* [수정 3] 섹션 간격 30% 축소 */
+        .comp-section { padding: 50px 0; background: #f0f7ff; }
+        .feature-list { padding: 50px 0; }
+        
         .comp-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .comp-table th, .comp-table td { padding: 25px; text-align: center; border: 1px solid #eee; font-size: 15px; }
+        .comp-table th, .comp-table td { padding: 20px; text-align: center; border: 1px solid #eee; font-size: 15px; }
         .comp-table th.brand { background: #0055ff; color: white; }
 
-        .feature-list { padding: 80px 0; }
-        .feature-item { display: flex; gap: 60px; align-items: center; margin-bottom: 100px; }
+        .feature-item { display: flex; gap: 60px; align-items: center; margin-bottom: 60px; }
         .feature-item:nth-child(even) { flex-direction: row-reverse; }
-        /* [수정 2, 3] 깨지지 않는 이미지, 적절한 크기 조절 */
         .feature-img { flex: 1; }
-        .feature-img img { width: 100%; border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); object-fit: cover; height: 350px; }
+        .feature-img img { width: 100%; border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .feature-txt { flex: 1; }
-        .feature-txt h3 { font-size: 30px; margin-bottom: 20px; font-weight: 800; color: #0055ff; }
-        .feature-txt p { font-size: 16px; color: #555; margin-bottom: 15px; }
+        .feature-txt h3 { font-size: 28px; margin-bottom: 15px; font-weight: 800; color: #003bb3; }
         
-        .cta { text-align: center; padding: 100px 0; background: linear-gradient(135deg, #0055ff, #002299); color: white; }
+        .cta { text-align: center; padding: 80px 0; background: linear-gradient(135deg, #0055ff, #002299); color: white; }
+        
+        /* [수정 4] 푸터 index.html과 동일 */
+        footer { background: var(--dark); color: #999; padding: 40px 0; font-size: 13px; }
+        .footer-grid { display: flex; justify-content: space-between; }
+
+        /* [수정 1] 반응형 */
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .feature-item { flex-direction: column; }
+            .feature-item:nth-child(even) { flex-direction: column; }
+            .comp-table { display: block; overflow-x: auto; white-space: nowrap; }
+            .footer-grid { flex-direction: column; text-align: center; gap: 20px; }
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="container nav-wrap">
             <a href="index.html" class="logo"><i class="fas fa-layer-group"></i> 골든웨이브</a>
-            <div style="display:flex; align-items:center;">
-                <a href="features.html" class="nav-link" style="color:#0055ff;">기능</a>
-                <a href="portfolio.html" class="nav-link">포트폴리오</a>
-                <a href="pricing.html" class="nav-link">가격</a>
-                <a href="faq.html" class="nav-link">FAQ</a>
-            </div>
-            <a href="start_building.html" class="btn-primary" style="margin-left: 30px;">Start Building</a>
+            <ul class="nav-menu">
+                <li><a href="features.html">기능</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="pricing.html">가격</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+            <a href="start_building.html" class="btn-primary">Start Building</a>
         </div>
     </header>
 
     <div class="page-hero">
         <div class="container">
-            <h1 style="font-size:42px; font-weight:800; margin-bottom:20px;">비즈니스에 최적화된 웹사이트 솔루션</h1>
-            <p style="font-size:18px; color:#666;">복잡한 기능은 빼고, 꼭 필요한 핵심 기능만 담아 누구나 쉽게 운영할 수 있습니다.<br>골든웨이브만의 강력한 차별점을 확인해보세요.</p>
+            <h1 style="font-size:42px; font-weight:800; margin-bottom:20px; color:#003bb3;">비즈니스에 최적화된 웹사이트</h1>
+            <p style="font-size:18px; color:#666;">복잡한 기능은 빼고, 꼭 필요한 핵심 기능만 담았습니다.</p>
             <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1200" alt="Features Dashboard">
         </div>
     </div>
 
     <div class="comp-section">
         <div class="container">
-            <h2 style="text-align:center; margin-bottom:40px; font-size:36px; font-weight:800;">왜 골든웨이브 인가요?</h2>
+            <h2 style="text-align:center; margin-bottom:40px; font-size:36px; font-weight:800; color:#003bb3;">왜 골든웨이브 인가요?</h2>
             <table class="comp-table">
-                <thead>
-                    <tr>
-                        <th>구분</th>
-                        <th class="brand">골든웨이브</th>
-                        <th>일반 에이전시</th>
-                        <th>AI / 웹빌더(Wix 등)</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>구분</th><th class="brand">골든웨이브</th><th>일반 에이전시</th><th>AI / 웹빌더</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td><strong>비용</strong></td>
-                        <td style="color:#0055ff; font-weight:bold;">10만원 (1회 결제)</td>
-                        <td>200만원 이상</td>
-                        <td>월 10~20만원 (구독형)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>서버비</strong></td>
-                        <td style="color:#0055ff; font-weight:bold;">평생 무료</td>
-                        <td>매월 발생 (유지보수비)</td>
-                        <td>구독 해지시 사이트 삭제</td>
-                    </tr>
-                    <tr>
-                        <td><strong>난이도</strong></td>
-                        <td style="color:#0055ff; font-weight:bold;">전문가 제작 + 쉬운 수정</td>
-                        <td>전문가 의존 (수정 어려움)</td>
-                        <td>직접 제작 (학습 필요)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>소유권</strong></td>
-                        <td style="color:#0055ff; font-weight:bold;">100% 고객 소유</td>
-                        <td>에이전시 종속</td>
-                        <td>플랫폼 종속</td>
-                    </tr>
+                    <tr><td>비용</td><td style="color:#0055ff; font-weight:bold;">10만원 (1회)</td><td>200만원 이상</td><td>월 10~20만원</td></tr>
+                    <tr><td>서버비</td><td style="color:#0055ff; font-weight:bold;">평생 무료</td><td>매월 발생</td><td>구독 해지시 삭제</td></tr>
+                    <tr><td>난이도</td><td style="color:#0055ff; font-weight:bold;">전문가 제작 + 쉬운 수정</td><td>전문가 의존</td><td>직접 제작 (학습 필요)</td></tr>
                 </tbody>
             </table>
         </div>
@@ -111,68 +94,28 @@
 
     <div class="container feature-list">
         <div class="feature-item">
-            <div class="feature-img">
-                <img src="https://images.unsplash.com/photo-1555421689-4926337621fa?q=80&w=800" alt="Easy Editing">
-            </div>
-            <div class="feature-txt">
-                <h3>1. 보이는 그대로, 직관적인 수정</h3>
-                <p>
-                    더 이상 홈페이지 수정을 위해 개발자에게 연락하거나 복잡한 코드를 배울 필요가 없습니다. 
-                    골든웨이브는 '보이는 그대로(WYSIWYG)' 수정할 수 있는 직관적인 전용 빌더를 제공합니다.
-                </p>
-                <p>
-                    로그인 후 텍스트를 클릭하여 오타를 수정하고, 이미지를 드래그하여 교체하세요. 
-                    블로그나 파워포인트를 다룰 줄 안다면 누구나 전문가 수준으로 웹사이트를 관리할 수 있습니다. 
-                    이 모든 과정이 추가 비용 없이 평생 무료로 제공됩니다.
-                </p>
-            </div>
+            <div class="feature-img"><img src="https://images.unsplash.com/photo-1555421689-4926337621fa?q=80&w=800"></div>
+            <div class="feature-txt"><h3>1. 보이는 그대로, 직관적인 수정</h3><p>복잡한 코딩 없이 화면에 보이는 텍스트와 이미지를 클릭하여 바로 수정할 수 있습니다.</p></div>
         </div>
-
         <div class="feature-item">
-            <div class="feature-img">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800" alt="Server Data">
-            </div>
-            <div class="feature-txt">
-                <h3>2. 평생 무료 서버 & 도메인 제공</h3>
-                <p>
-                    일반적인 에이전시는 매달 서버비, 호스팅비, 유지보수비 명목으로 비용을 청구합니다. 
-                    하지만 골든웨이브는 Github와 Netlify의 최신 정적 호스팅 기술을 연동하여 인프라 비용을 물리적으로 0원으로 만들었습니다.
-                </p>
-                <p>
-                    트래픽이 아무리 많이 몰려도 추가 과금이 발생하지 않으며, 전 세계 어디서 접속하든 빠른 속도를 보장하는 글로벌 CDN이 적용됩니다. 
-                    기본 도메인(netlify.app) 또한 평생 무료로 제공되어 초기 사업 운영비를 획기적으로 절감할 수 있습니다.
-                </p>
-            </div>
+            <div class="feature-img"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800"></div>
+            <div class="feature-txt"><h3>2. 평생 무료 서버 & 도메인</h3><p>Github와 Netlify를 연동하여 서버 비용을 0원으로 만들었습니다.</p></div>
         </div>
-
         <div class="feature-item">
-            <div class="feature-img">
-                <img src="https://images.unsplash.com/photo-1526498460520-4c246339dccb?q=80&w=800" alt="Mobile Responsive">
-            </div>
-            <div class="feature-txt">
-                <h3>3. 완벽한 모바일 반응형 디자인</h3>
-                <p>
-                    이제 PC보다 모바일 접속자가 더 많은 시대입니다. 
-                    골든웨이브의 모든 템플릿은 기기의 화면 크기에 따라 자동으로 레이아웃이 최적화되는 '반응형 웹(Responsive Web)' 기술이 적용되어 있습니다.
-                </p>
-                <p>
-                    스마트폰, 태블릿, 노트북, 대형 모니터 등 어떤 환경에서도 깨지지 않고 아름다운 디자인을 유지합니다. 
-                    별도의 모바일 페이지를 만들 필요가 없어 관리가 용이하며, 구글 검색엔진(SEO)에서도 높은 점수를 받아 노출에 유리합니다.
-                </p>
-            </div>
+            <div class="feature-img"><img src="https://images.unsplash.com/photo-1526498460520-4c246339dccb?q=80&w=800"></div>
+            <div class="feature-txt"><h3>3. 완벽한 모바일 반응형</h3><p>PC, 태블릿, 모바일 어떤 기기에서도 깨지지 않고 완벽하게 보입니다.</p></div>
         </div>
     </div>
 
     <div class="cta">
-        <h2 style="margin-bottom: 20px;">비즈니스 성공을 위한 가장 합리적인 선택</h2>
-        <p style="margin-bottom:40px; font-size: 18px; opacity: 0.9;">10만원으로 평생 소유하는 나만의 웹사이트를 지금 바로 만들어보세요.</p>
-        <a href="start_building.html" style="background:#fbbf24; color:#111; padding:18px 50px; border-radius:8px; font-weight:800; text-decoration:none; font-size:18px; display:inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">제작 신청하기</a>
+        <h2 style="margin-bottom: 20px;">지금 바로 시작하세요</h2>
+        <a href="start_building.html" style="background:#fbbf24; color:#111; padding:15px 40px; border-radius:5px; font-weight:800; text-decoration:none;">제작 신청하기</a>
     </div>
 
     <footer>
-        <div class="container">
-            <p>상호명: 골든웨이브 | 대표: 이동길 | 사업자등록번호: 326-58-00636</p>
-            <p>golden2378@naver.com</p>
+        <div class="container footer-grid">
+            <div><div style="font-size:20px; font-weight:800; color:white; margin-bottom:15px;">골든웨이브</div><p>상호명 : 골든웨이브 | 대표 : 이동길 | 사업자등록번호: 326-58-00636<br>주소: 인천광역시 미추홀구 석정로140번길 29</p></div>
+            <div style="text-align:right;" class="footer-right"><p><strong>Customer Center</strong></p><p>golden2378@naver.com</p><div style="margin-top:15px; font-size:20px; color:white;"><i class="fas fa-comment"></i></div></div>
         </div>
     </footer>
 </body>
