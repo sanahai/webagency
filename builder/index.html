@@ -13,7 +13,7 @@
         body { font-family: 'Manrope', 'Pretendard'; color: var(--text); margin:0; line-height:1.6; word-break:keep-all; overflow-x:hidden; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .section { padding: 45px 0; } /* 간격 축소 유지 */
+        .section { padding: 40px 0; } /* 간격 축소 유지 */
 
         /* Header */
         header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
@@ -49,17 +49,10 @@
         .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 40px; }
 
         /* [중요 수정] 이미지 크기 복원 (50% -> 90%) 및 중앙 정렬 */
-        .hero-visual { text-align: center; width: 100%; display: flex; justify-content: center; }
-        .hero-visual img { 
-            width: 100%; 
-            max-width: 90%; /* 너무 작아지지 않도록 90%로 설정 */
-            border-radius: 20px; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
-            animation: float 6s infinite ease-in-out; 
-            object-fit: cover;
-        }
+        .hero-visual { text-align: center; }
+        .hero-visual img { width: 50%; margin: 0 auto; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); animation: float 6s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
+        
         /* Features */
         .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
         .bg-gray { background-color: var(--bg-gray); }
