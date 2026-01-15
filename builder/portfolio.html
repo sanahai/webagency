@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; }
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; --accent: #fbbf24; }
         body { margin:0; font-family:'Manrope', 'Pretendard'; color:var(--text); line-height:1.6; word-break:keep-all; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -20,23 +20,25 @@
         .nav-menu a:hover { color: var(--primary); }
         .btn-primary { background: var(--primary); color: white; padding: 12px 25px; border-radius: 5px; font-weight: 700; }
 
-        /* [수정 2] 상단 간격 조절 (100px) + [수정 8] 이미지 삭제 */
-        .pf-hero { padding: 120px 0 40px; text-align: center; background: #f9fafb; }
+        /* [수정 2] 상단 간격 조절 (100px) */
+        .pf-hero { padding: 100px 0 30px; text-align: center; background: #f9fafb; }
         .pf-hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 15px; color: #003bb3; }
         
-        .pf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 40px 0; }
+        .pf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 30px 0; }
         .pf-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; }
         .pf-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        /* [수정 9] 안정적인 이미지 소스 */
         .pf-img { width: 100%; aspect-ratio: 3/4; background: #eee; }
         .pf-img img { width: 100%; height: 100%; object-fit: cover; }
         .pf-info { padding: 15px; }
         .pf-cat { color: var(--primary); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; display: block; }
         .pf-title { font-weight: 700; font-size: 14px; color: var(--dark); }
         
-        .cta { text-align: center; padding: 80px 0; background: linear-gradient(135deg, #0055ff, #002299); color: white; }
+        .cta-box { background: linear-gradient(135deg, #0a1122 0%, #002299 100%); padding: 60px 30px; text-align: center; border-radius: 20px; color: white; margin: 0 auto; max-width: 70%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .cta-box h2 { font-size: 46px; font-weight: 800; margin-bottom: 15px; color: white; } 
+        .cta-box p { color: #e0e0e0; margin-bottom: 30px; }
+        .btn-cta { background: var(--accent); color: #111; padding: 15px 40px; border-radius: 8px; font-weight: 800; display: inline-block; font-size: 18px; }
         
-        footer { background: var(--dark); color: #999; padding: 40px 0; font-size: 13px; }
+        footer { background: var(--dark); color: #999; padding: 35px 0; font-size: 13px; }
         .footer-grid { display: flex; justify-content: space-between; }
 
         @media (max-width: 1024px) { .pf-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -44,6 +46,8 @@
             .nav-menu { display: none; }
             .pf-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-grid { flex-direction: column; text-align: center; gap: 20px; }
+            .footer-right { text-align: center; }
+            .cta-box { max-width: 100%; } .cta-box h2 { font-size: 32px; }
         }
     </style>
 </head>
@@ -70,11 +74,12 @@
 
     <div class="container pf-grid">
         <script>
-            // 안정적인 Unsplash Source 사용
+            // Unsplash Source (Static URL)
+            const sampleImg = "https://images.unsplash.com/photo-1467232065839-41ed11f4d914?q=80&w=400&h=600&fit=crop";
             for(let i=1; i<=32; i++) {
                 document.write(`
                     <div class="pf-card">
-                        <div class="pf-img"><img src="https://source.unsplash.com/random/300x400?website,design&sig=${i}"></div>
+                        <div class="pf-img"><img src="${sampleImg}"></div>
                         <div class="pf-info">
                             <span class="pf-cat">Category</span>
                             <div class="pf-title">Project Reference ${i}</div>
@@ -85,15 +90,18 @@
         </script>
     </div>
 
-    <div class="cta">
-        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 20px;">내 비즈니스도 이렇게 만들고 싶다면?</h2>
-        <a href="start_building.html" style="background:#fbbf24; color:#111; padding:15px 40px; text-decoration:none; font-weight:800; border-radius:5px;">제작 신청하기</a>
-    </div>
+    <section class="container" style="margin-bottom:50px;">
+        <div class="cta-box">
+            <h2>Ready to grow your business?</h2>
+            <p>더 이상 망설이지 마세요. 커피 20잔 값이면 평생 소유할 수 있습니다.</p>
+            <a href="start_building.html" class="btn-cta">10만원으로 시작하기</a>
+        </div>
+    </section>
 
     <footer>
         <div class="container footer-grid">
             <div><div style="font-size:20px; font-weight:800; color:white; margin-bottom:15px;">골든웨이브</div><p>상호명 : 골든웨이브 | 대표 : 이동길 | 사업자등록번호: 326-58-00636<br>주소: 인천광역시 미추홀구 석정로140번길 29</p></div>
-            <div style="text-align:right;" class="footer-right"><p><strong>Customer Center</strong></p><p>golden2378@naver.com</p><div style="margin-top:15px; font-size:20px; color:white;"><i class="fas fa-comment"></i></div></div>
+            <div class="footer-right" style="text-align:right;"><p><strong>Customer Center</strong></p><p>golden2378@naver.com</p><div style="margin-top:15px; font-size:20px; color:white;"><i class="fas fa-comment"></i></div></div>
         </div>
     </footer>
 </body>
