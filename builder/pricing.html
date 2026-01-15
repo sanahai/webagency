@@ -8,9 +8,11 @@
     <style>
         body { margin:0; font-family:'Pretendard'; color:#333; line-height:1.6; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; }
+        header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+        header a { text-decoration: none; color: #333; font-weight: bold; font-size:14px; margin-left:20px;}
         footer { background: #0a1122; color: #999; padding: 40px 0; text-align: center; }
-        
+        .btn-primary { background: #0055ff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; }
+
         .page-hero { padding: 60px 0; text-align: center; background: #f9fafb; }
         .page-hero img { width: 100%; max-width: 800px; border-radius: 10px; margin-top: 20px; }
 
@@ -22,13 +24,12 @@
         .zigzag-img { flex:1; } .zigzag-img img { width: 100%; border-radius: 10px; }
         .zigzag-text { flex:1; }
 
-        /* [수정] 박스 디자인 변경 */
         .service-list { display: flex; gap: 40px; margin-top: 40px; }
         .service-box { flex: 1; padding: 30px; border-radius: 10px; }
         /* 무료: 색상 박스 */
         .box-free { background: #eef2ff; border: 1px solid #0055ff; }
         .box-free h3 { color: #0055ff; border-bottom: 2px solid #0055ff; display: inline-block; padding-bottom: 5px; }
-        /* 유료: 흰색 + 검은 테두리 */
+        /* [수정] 유료: 흰색 + 검은 테두리 */
         .box-paid { background: white; border: 2px solid black; color: black; }
         .box-paid h3 { border-bottom: 2px solid black; display: inline-block; padding-bottom: 5px; }
         
@@ -38,8 +39,11 @@
 </head>
 <body>
     <header class="container">
-        <a href="index.html" style="font-weight:800; font-size:20px; text-decoration:none; color:black;">골든웨이브</a>
-        <a href="start_building.html" style="background:#0055ff; color:white; padding:10px 20px; border-radius:5px; text-decoration:none;">Start Building</a>
+        <a href="index.html" style="font-size:20px;">골든웨이브</a>
+        <div style="display:flex; gap:20px;">
+            <a href="features.html">기능</a><a href="portfolio.html">포트폴리오</a><a href="pricing.html">가격</a><a href="faq.html">FAQ</a>
+        </div>
+        <a href="start_building.html" class="btn-primary">Start Building</a>
     </header>
 
     <div class="page-hero">
@@ -61,7 +65,7 @@
             <div class="zigzag-img"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600"></div>
             <div class="zigzag-text">
                 <h3>2. 템플릿 기반의 고효율 프로세스</h3>
-                <p>처음부터 하나하나 코딩하는 방식은 시간이 오래 걸리고 인건비가 비쌉니다. 저희는 다양한 업종별로 최적화된 고퀄리티 템플릿을 미리 개발해 두었습니다. 고객님의 콘텐츠만 입히면 되는 구조이기에 제작 시간을 90% 단축하고 가격을 낮췄습니다.</p>
+                <p>처음부터 새로 개발하는 것이 아니라, 검증된 고퀄리티 템플릿을 기반으로 커스터마이징합니다. 제작 시간을 획기적으로 단축하여 인건비를 줄였습니다.</p>
             </div>
         </div>
         <div class="zigzag-row">
@@ -76,7 +80,6 @@
     <section class="section" style="background:#f9fafb;">
         <div class="container">
             <h2 style="text-align:center; margin-bottom:30px;">Why choose 100K WEB?</h2>
-            <p style="text-align:center; margin-bottom:30px;">타사 대비 압도적인 비용 절감 효과를 확인하세요.</p>
             <table style="width:100%; background:white; text-align:center; border-collapse:collapse;">
                 <tr style="background:#eee; height:50px;"><th>구분</th><th>저가 에이전시</th><th>골든웨이브</th></tr>
                 <tr style="height:50px; border-bottom:1px solid #eee;"><td>비용</td><td>300,000원 + α</td><td style="color:blue; font-weight:bold;">100,000원</td></tr>
@@ -117,7 +120,7 @@
     </div>
 
     <footer>
-        <div class="container"><p>상호명: 골든웨이브 | 대표: 이동길</p><p>golden2378@naver.com</p></div>
+        <div class="container"><p>상호명: 골든웨이브 | 대표: 이동길 | 사업자등록번호: 326-58-00636</p><p>golden2378@naver.com</p></div>
     </footer>
 </body>
 </html>
