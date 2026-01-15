@@ -29,29 +29,112 @@
         h1, h2, h3 { font-weight: 800; letter-spacing: -0.5px; color: #003bb3; line-height: 1.3; }
         .sec-title { font-size: 38px; margin-bottom: 15px; color: #003bb3; }
 
-        /* [수정됨] Hero Section */
-        .hero { padding: 160px 0 80px; position: relative; overflow: hidden; background: #fff; }
-        .hero-bg-circle { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: linear-gradient(45deg, #eef2ff, #faf5ff); top: -200px; right: -100px; z-index: 0; }
-        
-        /* 그리드 비율 1:1 유지 */
-        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; position: relative; z-index: 1; }
-        
-        .hero h1 { font-size: 54px; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
-        
-        .animated-text { background: linear-gradient(to right, #0055ff, #00d2ff, #0055ff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 3s linear infinite; }
-        @keyframes shine { to { background-position: 200% center; } }
+/* Hero Section 수정본: 1:1 비율 적용 및 간격 최적화 */
+    .hero { 
+        padding: 160px 0 100px; 
+        position: relative; 
+        overflow: hidden; 
+        background: #fff; 
+    }
+    
+    .hero-bg-circle { 
+        position: absolute; 
+        width: 600px; height: 600px; 
+        border-radius: 50%; 
+        background: linear-gradient(45deg, #eef2ff, #faf5ff); 
+        top: -200px; right: -100px; 
+        z-index: 0; 
+    }
 
-        .hero-text p { font-size: 18px; color: #4b5563; margin-bottom: 40px; }
-        .hero-badges { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .badge { background: #eff6ff; color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(0,85,255,0.1); white-space: nowrap; }
-        
-        /* [중요 수정] 버튼 영역이 좁을 때 줄바꿈 허용 */
-        .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 40px; }
+    /* [핵심 수정] 좌우 비율을 1:1(1fr 1fr)로 변경하여 텍스트 공간 확보 */
+    .hero-grid { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 60px; /* 좌우 요소 사이 간격 */
+        align-items: center; 
+        position: relative; 
+        z-index: 1; 
+    }
 
-        /* [중요 수정] 이미지 크기 복원 (50% -> 90%) 및 중앙 정렬 */
-        .hero-visual { text-align: center; }
-        .hero-visual img { width: 50%; margin: 0 auto; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); animation: float 6s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .hero h1 { 
+        font-size: 54px; 
+        font-weight: 800; 
+        line-height: 1.25; /* 줄간격 살짝 넓혀 가독성 확보 */
+        margin-bottom: 24px; 
+        word-break: keep-all; /* 단어 중간에 끊기지 않도록 설정 */
+    }
+
+    .animated-text { 
+        background: linear-gradient(to right, #0055ff, #00d2ff, #0055ff); 
+        background-size: 200% auto; 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        animation: shine 3s linear infinite; 
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .hero-text p { 
+        font-size: 18px; 
+        color: #4b5563; 
+        margin-bottom: 40px; 
+        line-height: 1.6;
+    }
+
+    .hero-badges { 
+        display: flex; 
+        gap: 10px; 
+        margin-bottom: 40px; 
+        flex-wrap: wrap; 
+    }
+    
+    .badge { 
+        background: #eff6ff; 
+        color: var(--primary); 
+        padding: 6px 14px; 
+        border-radius: 20px; 
+        font-size: 14px; 
+        font-weight: 700; 
+        border: 1px solid rgba(0,85,255,0.1);
+        white-space: nowrap; 
+    }
+
+    /* [핵심 수정] 버튼이 한 줄에 나오도록 Flex 설정 */
+    .hero-btns {
+        display: flex;
+        gap: 15px; /* 버튼 사이 간격 */
+        align-items: center;
+    }
+
+    /* [핵심 수정] 이미지 영역 중앙 정렬 및 크기 최적화 (80%) */
+    .hero-visual { 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+    }
+    
+    .hero-visual img { 
+        width: 100%; 
+        max-width: 80%; /* 이미지를 80%로 줄여 텍스트와 균형 맞춤 */
+        border-radius: 20px; 
+        box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
+        animation: float 6s infinite ease-in-out; 
+    }
+    
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    /* 모바일 반응형: 1열로 변경 */
+    @media (max-width: 991px) {
+        .hero-grid { 
+            grid-template-columns: 1fr; /* 모바일에서는 1열 */
+            text-align: center; 
+            gap: 40px;
+        }
+        .hero-badges, .hero-btns { 
+            justify-content: center; 
+        }
+        .hero h1 { font-size: 40px; }
+        .hero-visual img { max-width: 90%; }
+    }
         
         /* Features */
         .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
@@ -136,23 +219,31 @@
         </div>
     </header>
 
-    <section class="hero">
+<section class="hero">
         <div class="hero-bg-circle"></div>
         <div class="container hero-grid">
             <div class="hero-text" data-aos="fade-right">
-                <h1>비즈니스 성장을 위한<br><span class="animated-text">완벽한 노코드 솔루션</span></h1>
-                <p>개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>골든웨이브가 이 모든 문제를 단 10만원에 해결해 드립니다.</p>
+                <h1>
+                    비즈니스 성장을 위한<br>
+                    <span class="animated-text">완벽한 노코드 솔루션</span>
+                </h1>
+                <p>
+                    개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>
+                    골든웨이브가 이 모든 문제를 단 10만원에 해결해 드립니다.
+                </p>
                 <div class="hero-badges">
                     <span class="badge"><i class="fas fa-check"></i> 평생 무료 서버</span>
                     <span class="badge"><i class="fas fa-check"></i> 24시간 완성</span>
                     <span class="badge"><i class="fas fa-check"></i> 평생 무료 도메인</span>
                 </div>
-                <div class="hero-btns" style="margin-top: 40px;">
+                
+                <div class="hero-btns">
                     <a href="#templates" class="btn-primary">템플릿 보기</a>
-                    <a href="features.html" class="btn-outline" style="margin-left: 10px;">기능 자세히 보기</a>
+                    <a href="features.html" class="btn-outline">기능 자세히 보기</a>
                 </div>
             </div>
-            <div class="hero-img" data-aos="fade-left">
+
+            <div class="hero-visual" data-aos="fade-left">
                 <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000" alt="Web Agency">
             </div>
         </div>
