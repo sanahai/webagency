@@ -9,36 +9,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        /* CSS는 V14와 동일하게 유지 (지면 관계상 핵심만 포함, 실제론 V14 스타일 전체 적용 필요) */
-        :root { --primary: #0055ff; --dark: #0a1122; --text-main: #1f2937; --bg-gray: #f9fafb; --accent: #fbbf24; }
-        body { font-family: 'Manrope', 'Pretendard'; color: var(--text-main); margin:0; line-height:1.6; word-break:keep-all; }
+        :root { --primary: #0055ff; --dark: #0a1122; --text: #1f2937; --bg: #f9fafb; --accent: #fbbf24; }
+        body { font-family: 'Manrope', 'Pretendard'; color: var(--text); margin:0; line-height:1.6; word-break:keep-all; overflow-x:hidden; }
+        a { text-decoration: none; color: inherit; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .section { padding: 50px 0; }
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; }
+        .section { padding: 60px 0; }
+        
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255,255,255,0.95); padding: 15px 0; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
         .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--dark); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .nav-menu { display: flex; gap: 30px; font-weight: 700; list-style: none; font-size: 14px; }
-        .nav-menu a { text-decoration: none; color: var(--dark); }
-        .btn-primary { background: var(--primary); color: white; padding: 12px 28px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 15px; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .nav-menu { display: flex; gap: 30px; font-weight: 700; list-style: none; font-size: 15px; }
+        .btn-primary { background: var(--primary); color: white; padding: 12px 25px; border-radius: 5px; font-weight: 700; }
         
-        /* Hero & Sections */
-        .hero { padding: 160px 0 80px; text-align: center; } 
-        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; text-align: left; }
-        .hero-text h1 { font-size: 54px; font-weight: 800; margin-bottom: 20px; line-height: 1.2; }
-        .animated-text { background: linear-gradient(to right, #0055ff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-visual img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        
-        /* Feature Grid */
+        /* Hero */
+        .hero { padding: 180px 0 100px; position: relative; overflow: hidden; }
+        .hero-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 60px; align-items: center; }
+        .hero h1 { font-size: 54px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; color: var(--dark); }
+        .typing-text { color: var(--primary); }
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: var(--primary); }
+        @keyframes blink { 50% { opacity: 0; } }
+        .hero-img img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); animation: float 6s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* Features (ZigZag) */
         .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-        .bg-gray { background-color: var(--bg-gray); }
-        .fb-image img { width: 100%; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        
+        .fb-text h2 { font-size: 36px; font-weight: 800; margin-bottom: 20px; }
+        .fb-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: 600; }
+        .fb-img img { width: 100%; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .separator { display: flex; justify-content: center; gap: 50px; font-size: 30px; color: #ddd; padding: 50px 0; }
+
+        /* Portfolio Grid */
+        .case-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .case-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .case-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .case-img { height: 140px; background: #eee; }
+        .case-img img { width: 100%; height: 100%; object-fit: cover; }
+        .case-info { padding: 12px; }
+        .case-cat { font-size: 10px; font-weight: 800; color: var(--primary); display: block; margin-bottom: 4px; }
+        .case-title { font-size: 13px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+        /* Reviews (Infinite) */
+        .review-wrap { overflow: hidden; white-space: nowrap; position: relative; }
+        .review-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
+        .review-track.reverse { animation-direction: reverse; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .r-card { width: 300px; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #eee; white-space: normal; }
+
+        /* Templates */
+        .tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .tpl-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .tpl-img { height: 220px; background: #eee; }
+        .tpl-img img { width: 100%; height: 100%; object-fit: cover; }
+        .tpl-info { padding: 20px; text-align: center; }
+        .tpl-custom { background: #fff; border: 2px dashed #aaa; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 300px; }
+
+        /* Comparison Table */
+        .comp-table { width: 100%; border-collapse: collapse; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .comp-table th { background: #f9fafb; padding: 20px; font-weight: 800; border-bottom: 1px solid #eee; }
+        .comp-table td { padding: 20px; border-bottom: 1px solid #eee; }
+        .comp-table .brand { background: #eff6ff; color: var(--primary); }
+
+        /* CTA */
+        .cta-box { background: linear-gradient(135deg, #0055ff, #002299); padding: 60px; text-align: center; border-radius: 20px; color: white; margin: 0 auto; max-width: 800px; }
+        .btn-cta { background: var(--accent); color: #111; padding: 15px 40px; border-radius: 8px; font-weight: 800; margin-top: 20px; display: inline-block; }
+
         /* Footer */
-        footer { background: var(--dark); color: #94a3b8; padding: 35px 0; font-size: 13px; }
+        footer { background: var(--dark); color: #999; padding: 40px 0; font-size: 13px; }
         .footer-grid { display: flex; justify-content: space-between; }
         
-        /* Mobile */
-        @media (max-width: 768px) { .nav-menu { display: none; } .hero-grid, .fb-grid { grid-template-columns: 1fr; } .footer-grid { flex-direction: column; gap: 20px; text-align: center; } }
+        @media (max-width: 768px) { 
+            .hero-grid, .fb-grid, .tpl-grid, .footer-grid { display: block; } 
+            .hero-text { margin-bottom: 50px; }
+            .case-grid { grid-template-columns: 1fr 1fr; }
+            .nav-menu { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -58,36 +103,138 @@
     <section class="hero">
         <div class="container hero-grid">
             <div class="hero-text" data-aos="fade-right">
-                <h1>비즈니스 성장을 위한<br><span class="animated-text">완벽한 노코드 솔루션</span></h1>
-                <p style="font-size:18px; color:#4b5563; margin-bottom:40px;">개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>골든웨이브가 이 모든 문제를 단 10만원에 해결해 드립니다.</p>
-                <div style="margin-bottom:30px;"><span style="background:#eff6ff; color:#0055ff; padding:5px 10px; border-radius:20px; font-weight:bold; font-size:13px; margin-right:10px;">✔ 평생 무료 서버</span> <span style="background:#eff6ff; color:#0055ff; padding:5px 10px; border-radius:20px; font-weight:bold; font-size:13px;">✔ 24시간 완성</span></div>
-                <a href="start_building.html" class="btn-primary">지금 시작하기</a>
+                <h1>비즈니스 성장을 위한<br><span class="typing-text"></span><span class="typing-cursor"></span></h1>
+                <p style="font-size:18px; color:#666; margin-bottom:40px;">개발자 구인난, 비싼 외주 비용, 복잡한 유지보수.<br>골든웨이브가 단 10만원에 해결해 드립니다.</p>
+                <div style="margin-bottom:30px; display:flex; gap:10px;">
+                    <span style="background:#eff6ff; color:var(--primary); padding:5px 12px; border-radius:20px; font-weight:700; font-size:13px;">✔ 평생 무료 서버</span>
+                    <span style="background:#eff6ff; color:var(--primary); padding:5px 12px; border-radius:20px; font-weight:700; font-size:13px;">✔ 24시간 완성</span>
+                    <span style="background:#eff6ff; color:var(--primary); padding:5px 12px; border-radius:20px; font-weight:700; font-size:13px;">✔ 평생 무료 도메인</span>
+                </div>
+                <a href="#templates" class="btn-primary">템플릿 보기</a>
             </div>
-            <div class="hero-visual" data-aos="fade-left">
+            <div class="hero-img" data-aos="fade-left">
                 <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000" alt="Dashboard">
             </div>
         </div>
     </section>
 
+    <div style="border-bottom:1px solid #eee; padding:30px 0; text-align:center; color:#ccc; font-size:30px; display:flex; justify-content:center; gap:50px;">
+        <i class="fab fa-google"></i> <i class="fab fa-aws"></i> <i class="fab fa-airbnb"></i> <i class="fab fa-spotify"></i>
+    </div>
+
     <section class="section">
         <div class="container fb-grid">
-            <div class="fb-image" data-aos="fade-right"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000" alt="Web Dev"></div>
+            <div class="fb-img" data-aos="fade-right"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000"></div>
             <div class="fb-text" data-aos="fade-left">
-                <h2 style="font-size:32px; font-weight:800; margin-bottom:20px;">압도적인 제작 속도와<br>직관적인 수정 경험</h2>
-                <p style="color:#4b5563;">기다림은 비즈니스의 적입니다. 자료 전달 후 24시간 이내에 사이트가 완성됩니다.</p>
+                <h2>압도적인 제작 속도와<br>직관적인 수정 경험</h2>
+                <p style="color:#666; margin-bottom:20px;">기다림은 비즈니스의 적입니다. 자료 전달 후 24시간 이내에 사이트가 완성됩니다.</p>
+                <ul class="fb-list">
+                    <li><i class="fas fa-check" style="color:blue"></i> 영업일 기준 24시간 내 셋팅</li>
+                    <li><i class="fas fa-check" style="color:blue"></i> 텍스트/이미지 실시간 클릭 수정</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <section class="section bg-gray">
+    <div class="separator">
+        <i class="fas fa-code"></i> <i class="fas fa-server"></i> <i class="fas fa-rocket"></i>
+    </div>
+
+    <section class="section" style="background:#f9fafb;">
         <div class="container fb-grid">
-            <div class="fb-image" style="order:2" data-aos="fade-left">
-                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000" alt="Server Hosting">
-            </div>
+            <div class="fb-img" style="order:2" data-aos="fade-left"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000"></div>
             <div class="fb-text" style="order:1" data-aos="fade-right">
-                <h2 style="font-size:32px; font-weight:800; margin-bottom:20px;">매달 나가는 서버비,<br>이제 그만 내세요.</h2>
-                <p style="color:#4b5563;">골든웨이브는 최신 정적 호스팅 기술을 활용하여 서버 비용을 0원으로 만들었습니다. 트래픽이 늘어나도 추가 비용이 없습니다.</p>
+                <h2>매달 나가는 서버비,<br>이제 그만 내세요.</h2>
+                <p style="color:#666;">골든웨이브는 최신 정적 호스팅 기술을 활용하여 서버 비용을 0원으로 만들었습니다.</p>
             </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">Made with Golden Wave</h2>
+            <div class="case-grid">
+                <script>
+                    const cats = ['BEAUTY','CORP','CAFE','PORTFOLIO','MEDICAL','LAW','SHOP','GYM','INTERIOR','FOOD','STARTUP','CONSULT','FASHION','ACADEMY','HOME'];
+                    for(let i=0; i<15; i++){
+                        document.write(`<div class="case-card"><div class="case-img"><img src="https://source.unsplash.com/random/400x300?sig=${i}"></div><div class="case-info"><span class="case-cat">${cats[i]}</span><div class="case-title">Project ${i+1}</div></div></div>`);
+                    }
+                </script>
+            </div>
+            <div style="text-align:center; margin-top:30px;"><a href="portfolio.html" style="color:#666; font-weight:bold;">더 많은 레퍼런스 보기 →</a></div>
+        </div>
+    </section>
+
+    <section class="section" style="background:#f9fafb; overflow:hidden;">
+        <div class="container"><h2 style="text-align:center; margin-bottom:40px;">Customer Reviews</h2></div>
+        <div class="review-wrap">
+            <div class="review-track">
+                <script>
+                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:14px; margin:10px 0;">"10만원에 이 퀄리티라니 믿기지 않습니다. 강력 추천합니다."</p><strong>김민수 대표</strong></div>`);
+                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:14px; margin:10px 0;">"10만원에 이 퀄리티라니 믿기지 않습니다. 강력 추천합니다."</p><strong>김민수 대표</strong></div>`);
+                </script>
+            </div>
+        </div>
+        <div style="height:20px;"></div>
+        <div class="review-wrap">
+            <div class="review-track reverse">
+                <script>
+                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:14px; margin:10px 0;">"디자인이 너무 세련되고 수정도 간편해서 좋아요."</p><strong>이영희 원장</strong></div>`);
+                    for(let i=0; i<10; i++) document.write(`<div class="r-card"><div style="color:#fbbf24">★★★★★</div><p style="font-size:14px; margin:10px 0;">"디자인이 너무 세련되고 수정도 간편해서 좋아요."</p><strong>이영희 원장</strong></div>`);
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="templates">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">Premium Templates</h2>
+            <div class="tpl-grid">
+                <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=800"></div><div class="tpl-info"><h3>Beauty</h3><p>에스테틱 / 뷰티</p></div></div>
+                <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800"></div><div class="tpl-info"><h3>Corporate</h3><p>기업 / 스타트업</p></div></div>
+                <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800"></div><div class="tpl-info"><h3>Restaurant</h3><p>식당 / 카페</p></div></div>
+                <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800"></div><div class="tpl-info"><h3>Portfolio</h3><p>개인 / 프리랜서</p></div></div>
+                <div class="tpl-card"><div class="tpl-img"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=800"></div><div class="tpl-info"><h3>Medical</h3><p>병원 / 한의원</p></div></div>
+                <div class="tpl-custom">
+                    <i class="fas fa-palette" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
+                    <h3>Custom Color</h3><p style="color:#666;">브랜드 컬러 변경 가능</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background:#f9fafb;">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">Why choose 골든웨이브?</h2>
+            <table class="comp-table">
+                <thead><tr><th>구분</th><th>일반 에이전시</th><th>저가 에이전시</th><th class="brand">골든웨이브</th></tr></thead>
+                <tbody>
+                    <tr><td>비용</td><td>200만원+</td><td>300,000원</td><td style="color:blue; font-weight:bold;">100,000원</td></tr>
+                    <tr><td>서버비</td><td>매월 발생</td><td>별도 구매</td><td style="color:blue; font-weight:bold;">평생 무료</td></tr>
+                    <tr><td>기간</td><td>2주 이상</td><td>3~5일</td><td style="color:blue; font-weight:bold;">24시간</td></tr>
+                    <tr><td>수정</td><td>비용 발생</td><td>추가 비용</td><td style="color:blue; font-weight:bold;">무료 (빌더)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">FAQ</h2>
+            <div style="max-width:800px; margin:0 auto;">
+                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 정말 매달 내는 서버비가 0원인가요?</strong><br><span style="color:#666; font-size:14px;">네 맞습니다. 최신 정적 호스팅 기술을 통해 평생 무료입니다.</span></div>
+                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 수정은 어떻게 하나요?</strong><br><span style="color:#666; font-size:14px;">전용 빌더 링크를 통해 누구나 쉽게 수정 가능합니다.</span></div>
+                <div style="border-bottom:1px solid #eee; padding:20px;"><strong>Q. 환불 가능한가요?</strong><br><span style="color:#666; font-size:14px;">작업 시작 전 100% 환불 가능합니다.</span></div>
+            </div>
+            <div style="text-align:center; margin-top:30px;"><a href="faq.html" class="btn-primary" style="background:transparent; color:#333; border:1px solid #ccc;">더 많은 FAQ 보기</a></div>
+        </div>
+    </section>
+
+    <section class="container" style="margin-bottom:50px;">
+        <div class="cta-box">
+            <h2>Ready to grow your business?</h2>
+            <p>더 이상 망설이지 마세요. 커피 20잔 값이면 평생 소유할 수 있습니다.</p>
+            <a href="start_building.html" class="btn-cta">10만원으로 시작하기</a>
         </div>
     </section>
 
@@ -95,20 +242,30 @@
         <div class="container footer-grid">
             <div>
                 <div style="font-size:20px; font-weight:800; color:white; margin-bottom:15px;">골든웨이브</div>
-                <p>상호명 : 골든웨이브 | 대표 : 이동길</p>
-                <p>사업자등록번호 : 326-58-00636</p>
-                <p>주소 : 인천광역시 미추홀구 석정로140번길 29</p>
+                <p>상호명: 골든웨이브 | 대표: 이동길 | 사업자등록번호: 326-58-00636<br>주소: 인천광역시 미추홀구 석정로140번길 29</p>
             </div>
             <div style="text-align:right;">
                 <p><strong>Customer Center</strong></p>
                 <p>golden2378@naver.com</p>
-                <div style="margin-top:15px; font-size:20px; color:white;">
-                    <i class="fas fa-comment"></i>
-                </div>
+                <div style="margin-top:15px; font-size:20px; color:white;"><i class="fas fa-comment"></i></div>
             </div>
         </div>
     </footer>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init();</script>
+    <script>
+        AOS.init();
+        const textElement = document.querySelector('.typing-text');
+        const words = ["완벽한 노코드 솔루션", "압도적인 가성비", "가장 스마트한 선택"];
+        let i = 0, j = 0, isDeleting = false;
+        function type() {
+            const current = words[i];
+            textElement.textContent = isDeleting ? current.substring(0, j--) : current.substring(0, j++);
+            if (!isDeleting && j === current.length + 1) { isDeleting = true; setTimeout(type, 2000); }
+            else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); }
+            else setTimeout(type, isDeleting ? 50 : 100);
+        }
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
 </body>
 </html>
