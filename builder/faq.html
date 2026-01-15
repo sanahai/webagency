@@ -8,7 +8,7 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        body { margin:0; font-family:'Pretendard'; line-height:1.6; color:#333; }
+        body { margin:0; font-family:'Pretendard'; line-height:1.6; color:#333; word-break: keep-all; }
         .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
         header { padding: 15px 0; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
         header a { text-decoration: none; color: #333; font-weight: bold; font-size:14px; margin-left:20px;}
@@ -19,9 +19,20 @@
 
         .faq-list { margin: 50px 0; }
         .faq-item { border-bottom: 1px solid #eee; }
-        .faq-q { padding: 20px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; }
+        
+        /* [수정 1] 질문 중앙 정렬 (justify-content: center) */
+        .faq-q { 
+            padding: 20px; font-weight: bold; cursor: pointer; 
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            text-align: center;
+        }
         .faq-q:hover { color: #0055ff; }
-        .faq-a { padding: 0 20px 20px; display: none; color: #666; background: #fff; line-height: 1.8; }
+        
+        /* [수정 1] 답변 중앙 정렬 (text-align: center) */
+        .faq-a { 
+            padding: 0 20px 20px; display: none; color: #666; background: #fff; line-height: 1.8; 
+            text-align: center; 
+        }
         .faq-item.active .faq-a { display: block; }
         .faq-item.active .faq-q i { transform: rotate(180deg); }
 
